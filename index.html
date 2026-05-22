@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>People Development Framework</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .framework {
+      width: 100%;
+      max-width: 900px;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+
+    .framework td {
+      border: 1px solid #ccc;
+      padding: 14px 10px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* Category header rows */
+    .header-row td {
+      font-weight: bold;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: #fff;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .header-growth    { background-color: #7ec8e3; color: #1a1a1a; }
+    .header-trusted   { background-color: #1e4d6b; }
+    .header-team      { background-color: #1e4d6b; }
+    .header-courageous{ background-color: #1e4d6b; }
+    .header-resourceful{ background-color: #1e4d6b; }
+    .header-outcome   { background-color: #6aaa3a; }
+
+    /* Competency cells */
+    .competency {
+      background: #fff;
+      font-size: 12.5px;
+      color: #222;
+    }
+
+    .empty {
+      background: #f9f9f9;
+      border-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <table class="framework">
+
+    <!-- GROWTH MINDSET -->
+    <tr class="header-row">
+      <td class="header-growth" colspan="6">GROWTH MINDSET</td>
+    </tr>
+    <tr>
+      <td class="competency">Curious</td>
+      <td class="competency">Open to Feedback</td>
+      <td class="competency">Experimentation</td>
+      <td class="competency">Focusing on Solutions</td>
+      <td class="competency">Make work Better</td>
+      <td class="empty"></td>
+    </tr>
+
+    <!-- TRUSTED -->
+    <tr class="header-row">
+      <td class="header-trusted" colspan="6">TRUSTED</td>
+    </tr>
+    <tr>
+      <td class="competency">Open and Transparent</td>
+      <td class="competency">Listen and Gives Candid Feedback</td>
+      <td class="competency">Open / Not Shying away from Tough Conversations</td>
+      <td class="competency">Creating Safe Environments to Debate</td>
+      <td class="empty"></td>
+      <td class="empty"></td>
+    </tr>
+
+    <!-- TEAM FOCUSED -->
+    <tr class="header-row">
+      <td class="header-team" colspan="6">TEAM FOCUSED</td>
+    </tr>
+    <tr>
+      <td class="competency">Respectful</td>
+      <td class="competency">Empathy</td>
+      <td class="competency">Open to different Perspectives</td>
+      <td class="empty"></td>
+      <td class="empty"></td>
+      <td class="empty"></td>
+    </tr>
+
+    <!-- COURAGEOUS -->
+    <tr class="header-row">
+      <td class="header-courageous" colspan="6">COURAGEOUS</td>
+    </tr>
+    <tr>
+      <td class="competency">Willingness to make critical decisions</td>
+      <td class="competency">Ownership</td>
+      <td class="competency">Taking calculated risks</td>
+      <td class="competency">Combining Data and Experience</td>
+      <td class="competency">Forging actionable Path forward</td>
+      <td class="competency">Sharing Unusual Ideas</td>
+    </tr>
+
+    <!-- RESOURCEFUL -->
+    <tr class="header-row">
+      <td class="header-resourceful" colspan="6">RESOURCEFUL</td>
+    </tr>
+    <tr>
+      <td class="competency">Facing Challenges Head on</td>
+      <td class="competency">Creative</td>
+      <td class="competency">Resilient</td>
+      <td class="competency">Ability to Prioritise</td>
+      <td class="competency">Simplification</td>
+      <td class="competency">Move things Forward</td>
+    </tr>
+
+    <!-- OUTCOME FOCUSED -->
+    <tr class="header-row">
+      <td class="header-outcome" colspan="6">OUTCOME FOCUSED</td>
+    </tr>
+    <tr>
+      <td class="competency">Customer Centric View</td>
+      <td class="competency">Internal Perspective View Balanced with External View</td>
+      <td class="competency">Ability to Adjust a course of Action with Agility</td>
+      <td class="competency">Being Open to Fail Fast</td>
+      <td class="competency">Focused on Client Success</td>
+      <td class="empty"></td>
+    </tr>
+
+  </table>
+</body>
+</html>
