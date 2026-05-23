@@ -29,7 +29,7 @@
       border: 1px solid #ccc;
       padding: 12px 10px;
       text-align: center;
-      vertical-align: middle;
+      vertical-align: top;
       font-size: 13px;
       line-height: 1.4;
       transition: background 0.2s;
@@ -58,9 +58,18 @@
       color: #222;
     }
 
+    .competency-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 80px;
+      height: 100%;
+    }
+
     .competency .label {
       display: block;
       margin-bottom: 10px;
+      flex: 1;
     }
 
     /* Rating tints applied to the cell */
@@ -110,11 +119,11 @@
       <td class="header-growth" colspan="6">GROWTH MINDSET</td>
     </tr>
     <tr>
-      <td class="competency"><span class="label">Curious</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Open to Feedback</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Experimentation</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Focusing on Solutions</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Make work Better</span><div class="rating-buttons"></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Curious</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Open to Feedback</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Experimentation</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Focusing on Solutions</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Make work Better</span><div class="rating-buttons"></div></div></td>
       <td class="empty"></td>
     </tr>
 
@@ -123,10 +132,10 @@
       <td class="header-trusted" colspan="6">TRUSTED</td>
     </tr>
     <tr>
-      <td class="competency"><span class="label">Open and Transparent</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Listen and Gives Candid Feedback</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Open / Not Shying away from Tough Conversations</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Creating Safe Environments to Debate</span><div class="rating-buttons"></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Open and Transparent</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Listen and Gives Candid Feedback</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Open / Not Shying away from Tough Conversations</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Creating Safe Environments to Debate</span><div class="rating-buttons"></div></div></td>
       <td class="empty"></td>
       <td class="empty"></td>
     </tr>
@@ -136,9 +145,9 @@
       <td class="header-team" colspan="6">TEAM FOCUSED</td>
     </tr>
     <tr>
-      <td class="competency"><span class="label">Respectful</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Empathy</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Open to different Perspectives</span><div class="rating-buttons"></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Respectful</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Empathy</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Open to different Perspectives</span><div class="rating-buttons"></div></div></td>
       <td class="empty"></td>
       <td class="empty"></td>
       <td class="empty"></td>
@@ -149,12 +158,12 @@
       <td class="header-courageous" colspan="6">COURAGEOUS</td>
     </tr>
     <tr>
-      <td class="competency"><span class="label">Willingness to make critical decisions</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Ownership</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Taking calculated risks</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Combining Data and Experience</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Forging actionable Path forward</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Sharing Unusual Ideas</span><div class="rating-buttons"></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Willingness to make critical decisions</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Ownership</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Taking calculated risks</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Combining Data and Experience</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Forging actionable Path forward</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Sharing Unusual Ideas</span><div class="rating-buttons"></div></div></td>
     </tr>
 
     <!-- RESOURCEFUL -->
@@ -162,12 +171,12 @@
       <td class="header-resourceful" colspan="6">RESOURCEFUL</td>
     </tr>
     <tr>
-      <td class="competency"><span class="label">Facing Challenges Head on</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Creative</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Resilient</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Ability to Prioritise</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Simplification</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Move things Forward</span><div class="rating-buttons"></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Facing Challenges Head on</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Creative</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Resilient</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Ability to Prioritise</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Simplification</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Move things Forward</span><div class="rating-buttons"></div></div></td>
     </tr>
 
     <!-- OUTCOME FOCUSED -->
@@ -175,11 +184,11 @@
       <td class="header-outcome" colspan="6">OUTCOME FOCUSED</td>
     </tr>
     <tr>
-      <td class="competency"><span class="label">Customer Centric View</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Internal Perspective View Balanced with External View</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Ability to Adjust a course of Action with Agility</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Being Open to Fail Fast</span><div class="rating-buttons"></div></td>
-      <td class="competency"><span class="label">Focused on Client Success</span><div class="rating-buttons"></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Customer Centric View</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Internal Perspective View Balanced with External View</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Ability to Adjust a course of Action with Agility</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Being Open to Fail Fast</span><div class="rating-buttons"></div></div></td>
+      <td class="competency"><div class="competency-inner"><span class="label">Focused on Client Success</span><div class="rating-buttons"></div></div></td>
       <td class="empty"></td>
     </tr>
 
