@@ -80,9 +80,9 @@
     .name-input:focus { border-color: var(--accent); }
 
     .btn-export {
-      background: #5a1a18;
+      background: var(--accent);
       border: 1px solid var(--accent);
-      color: var(--accent);
+      color: #fff;
       font-size: 13px;
       font-weight: 700;
       border-radius: 8px;
@@ -92,7 +92,7 @@
       transition: background 0.15s;
     }
 
-    .btn-export:hover { background: #7a2420; }
+    .btn-export:hover { background: #c94540; border-color: #c94540; }
 
     .btn-reset {
       background: var(--surface);
@@ -224,6 +224,74 @@
     .rating-btn.active.low    { background: var(--low-color);  color: #fff; border-color: var(--low-color); }
 
     .rating-btn:hover:not(.active) { opacity: 0.65; }
+
+    /* ── Print / Export PDF ── */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
+
+      body {
+        background: #1a1520 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .topbar { display: none; }
+
+      .page-content { padding: 0; }
+
+      /* Print header */
+      .page-content::before {
+        content: attr(data-name);
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: #e05550;
+        margin-bottom: 8px;
+      }
+
+      .framework {
+        gap: 6px;
+      }
+
+      .category {
+        border-radius: 6px;
+        break-inside: avoid;
+      }
+
+      .category-header {
+        padding: 6px 10px;
+      }
+
+      .category-header h2 {
+        font-size: 9px;
+        letter-spacing: 1.2px;
+      }
+
+      .cards {
+        gap: 5px;
+        padding: 6px;
+      }
+
+      .card {
+        padding: 6px 6px 5px;
+        gap: 5px;
+        border-radius: 5px;
+        flex: 1 1 100px;
+        min-width: 90px;
+      }
+
+      .card-label {
+        font-size: 9px;
+      }
+
+      .rating-btn {
+        font-size: 8px;
+        padding: 2px 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -352,7 +420,9 @@
     // Export PDF
     document.getElementById('exportBtn').addEventListener('click', () => {
       const name = document.getElementById('nameInput').value.trim();
+      const content = document.querySelector('.page-content');
       const originalTitle = document.title;
+      content.setAttribute('data-name', name ? `${name} — People Development Framework` : 'People Development Framework');
       if (name) document.title = `${name} — People Development Framework`;
       window.print();
       document.title = originalTitle;
