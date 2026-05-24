@@ -5,222 +5,265 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>People Development Framework</title>
   <style>
+    :root {
+      --bg:           #1a1520;
+      --surface:      #231d2e;
+      --card:         #2a2438;
+      --accent:       #e05550;
+      --text:         #e8e0f0;
+      --text-muted:   #8880a0;
+      --border:       #3a3248;
+      --high-color:   #4caf70;
+      --med-color:    #e6a020;
+      --low-color:    #e05550;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 40px 20px;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px 24px;
       min-height: 100vh;
     }
 
-    .framework {
-      width: 100%;
-      max-width: 900px;
-      border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    header {
+      margin-bottom: 28px;
     }
 
-    .framework td {
-      border: 1px solid #ccc;
-      padding: 12px 10px;
-      text-align: center;
-      vertical-align: top;
+    header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    header p {
       font-size: 13px;
-      line-height: 1.4;
-      transition: background 0.2s;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
-    /* Category header rows */
-    .header-row td {
-      font-weight: bold;
-      font-size: 14px;
-      letter-spacing: 1px;
-      color: #fff;
-      padding: 10px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .header-growth     { background-color: #7ec8e3; color: #1a1a1a; }
-    .header-trusted    { background-color: #1e4d6b; }
-    .header-team       { background-color: #1e4d6b; }
-    .header-courageous { background-color: #1e4d6b; }
-    .header-resourceful{ background-color: #1e4d6b; }
-    .header-outcome    { background-color: #6aaa3a; }
-
-    /* Competency cells */
-    .competency {
-      background: #fff;
-      color: #222;
-    }
-
-    .competency-inner {
+    .framework {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      min-height: 80px;
-      height: 100%;
+      gap: 14px;
     }
 
-    .competency .label {
-      display: block;
-      margin-bottom: 10px;
+    /* Category section */
+    .category {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .category-header h2 {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--text);
       flex: 1;
     }
 
-    /* Rating tints applied to the cell */
-    .competency.rated-high   { background-color: #d4edda; }
-    .competency.rated-medium { background-color: #fff3cd; }
-    .competency.rated-low    { background-color: #f8d7da; }
+    .category-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Cards */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 10px 10px;
+      flex: 1 1 130px;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: default;
+    }
+
+    .card:hover {
+      border-color: #5a5068;
+    }
+
+    .card-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      flex: 1;
+      line-height: 1.45;
+    }
+
+    /* Rated state tints */
+    .card.rated-high   { background: rgba(76,175,112,0.10); border-color: var(--high-color); }
+    .card.rated-medium { background: rgba(230,160,32,0.10); border-color: var(--med-color); }
+    .card.rated-low    { background: rgba(224,85,80,0.10);  border-color: var(--low-color); }
 
     /* Rating buttons */
     .rating-buttons {
       display: flex;
-      justify-content: center;
       gap: 4px;
     }
 
     .rating-btn {
-      border: 1.5px solid currentColor;
+      flex: 1;
+      border: 1px solid currentColor;
       background: transparent;
       border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 11px;
-      font-weight: bold;
+      padding: 3px 0;
+      font-size: 10px;
+      font-weight: 700;
       cursor: pointer;
       transition: background 0.15s, color 0.15s;
     }
 
-    .rating-btn.high   { color: #2d7a3a; }
-    .rating-btn.medium { color: #8a6000; }
-    .rating-btn.low    { color: #a02020; }
+    .rating-btn.high   { color: var(--high-color); }
+    .rating-btn.medium { color: var(--med-color); }
+    .rating-btn.low    { color: var(--low-color); }
 
-    .rating-btn.active.high   { background: #2d7a3a; color: #fff; }
-    .rating-btn.active.medium { background: #e6a800; color: #fff; }
-    .rating-btn.active.low    { background: #c0392b; color: #fff; }
+    .rating-btn.active.high   { background: var(--high-color); color: #fff; border-color: var(--high-color); }
+    .rating-btn.active.medium { background: var(--med-color);  color: #fff; border-color: var(--med-color); }
+    .rating-btn.active.low    { background: var(--low-color);  color: #fff; border-color: var(--low-color); }
 
-    .rating-btn:hover:not(.active) { opacity: 0.7; }
-
-    .empty {
-      background: #f9f9f9;
-      border-color: #e0e0e0;
-    }
+    .rating-btn:hover:not(.active) { opacity: 0.65; }
   </style>
 </head>
 <body>
-  <table class="framework">
 
-    <!-- GROWTH MINDSET -->
-    <tr class="header-row">
-      <td class="header-growth" colspan="6">GROWTH MINDSET</td>
-    </tr>
-    <tr>
-      <td class="competency"><div class="competency-inner"><span class="label">Curious</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Open to Feedback</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Experimentation</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Focusing on Solutions</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Make work Better</span><div class="rating-buttons"></div></div></td>
-      <td class="empty"></td>
-    </tr>
+  <header>
+    <h1>People Development Framework</h1>
+    <p>Rate each competency — High, Medium, or Low</p>
+  </header>
 
-    <!-- TRUSTED -->
-    <tr class="header-row">
-      <td class="header-trusted" colspan="6">TRUSTED</td>
-    </tr>
-    <tr>
-      <td class="competency"><div class="competency-inner"><span class="label">Open and Transparent</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Listen and Gives Candid Feedback</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Open / Not Shying away from Tough Conversations</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Creating Safe Environments to Debate</span><div class="rating-buttons"></div></div></td>
-      <td class="empty"></td>
-      <td class="empty"></td>
-    </tr>
-
-    <!-- TEAM FOCUSED -->
-    <tr class="header-row">
-      <td class="header-team" colspan="6">TEAM FOCUSED</td>
-    </tr>
-    <tr>
-      <td class="competency"><div class="competency-inner"><span class="label">Respectful</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Empathy</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Open to different Perspectives</span><div class="rating-buttons"></div></div></td>
-      <td class="empty"></td>
-      <td class="empty"></td>
-      <td class="empty"></td>
-    </tr>
-
-    <!-- COURAGEOUS -->
-    <tr class="header-row">
-      <td class="header-courageous" colspan="6">COURAGEOUS</td>
-    </tr>
-    <tr>
-      <td class="competency"><div class="competency-inner"><span class="label">Willingness to make critical decisions</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Ownership</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Taking calculated risks</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Combining Data and Experience</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Forging actionable Path forward</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Sharing Unusual Ideas</span><div class="rating-buttons"></div></div></td>
-    </tr>
-
-    <!-- RESOURCEFUL -->
-    <tr class="header-row">
-      <td class="header-resourceful" colspan="6">RESOURCEFUL</td>
-    </tr>
-    <tr>
-      <td class="competency"><div class="competency-inner"><span class="label">Facing Challenges Head on</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Creative</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Resilient</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Ability to Prioritise</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Simplification</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Move things Forward</span><div class="rating-buttons"></div></div></td>
-    </tr>
-
-    <!-- OUTCOME FOCUSED -->
-    <tr class="header-row">
-      <td class="header-outcome" colspan="6">OUTCOME FOCUSED</td>
-    </tr>
-    <tr>
-      <td class="competency"><div class="competency-inner"><span class="label">Customer Centric View</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Internal Perspective View Balanced with External View</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Ability to Adjust a course of Action with Agility</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Being Open to Fail Fast</span><div class="rating-buttons"></div></div></td>
-      <td class="competency"><div class="competency-inner"><span class="label">Focused on Client Success</span><div class="rating-buttons"></div></div></td>
-      <td class="empty"></td>
-    </tr>
-
-  </table>
+  <div class="framework" id="framework"></div>
 
   <script>
-    const ratings = ['high', 'medium', 'low'];
+    const categories = [
+      {
+        name: 'Growth Mindset',
+        competencies: [
+          'Curious', 'Open to Feedback', 'Experimentation',
+          'Focusing on Solutions', 'Make work Better'
+        ]
+      },
+      {
+        name: 'Trusted',
+        competencies: [
+          'Open and Transparent', 'Listen and Gives Candid Feedback',
+          'Open / Not Shying away from Tough Conversations',
+          'Creating Safe Environments to Debate'
+        ]
+      },
+      {
+        name: 'Team Focused',
+        competencies: ['Respectful', 'Empathy', 'Open to different Perspectives']
+      },
+      {
+        name: 'Courageous',
+        competencies: [
+          'Willingness to make critical decisions', 'Ownership',
+          'Taking calculated risks', 'Combining Data and Experience',
+          'Forging actionable Path forward', 'Sharing Unusual Ideas'
+        ]
+      },
+      {
+        name: 'Resourceful',
+        competencies: [
+          'Facing Challenges Head on', 'Creative', 'Resilient',
+          'Ability to Prioritise', 'Simplification', 'Move things Forward'
+        ]
+      },
+      {
+        name: 'Outcome Focused',
+        competencies: [
+          'Customer Centric View',
+          'Internal Perspective View Balanced with External View',
+          'Ability to Adjust a course of Action with Agility',
+          'Being Open to Fail Fast', 'Focused on Client Success'
+        ]
+      }
+    ];
 
-    document.querySelectorAll('.competency').forEach(cell => {
-      const container = cell.querySelector('.rating-buttons');
-      if (!container) return;
+    const framework = document.getElementById('framework');
 
-      ratings.forEach(level => {
-        const btn = document.createElement('button');
-        btn.className = `rating-btn ${level}`;
-        btn.textContent = level.charAt(0).toUpperCase() + level.slice(1);
-        btn.addEventListener('click', () => {
-          const alreadyActive = btn.classList.contains('active');
+    categories.forEach(cat => {
+      const section = document.createElement('div');
+      section.className = 'category';
 
-          // Clear all active buttons and cell tint
-          container.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
-          ratings.forEach(r => cell.classList.remove(`rated-${r}`));
+      section.innerHTML = `
+        <div class="category-header">
+          <h2>${cat.name}</h2>
+          <span class="category-badge">${cat.competencies.length}</span>
+        </div>
+        <div class="cards"></div>
+      `;
 
-          // Toggle on if it wasn't already active
-          if (!alreadyActive) {
-            btn.classList.add('active');
-            cell.classList.add(`rated-${level}`);
-          }
+      const cardsEl = section.querySelector('.cards');
+
+      cat.competencies.forEach(comp => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const label = document.createElement('span');
+        label.className = 'card-label';
+        label.textContent = comp;
+
+        const buttons = document.createElement('div');
+        buttons.className = 'rating-buttons';
+
+        ['high', 'medium', 'low'].forEach(level => {
+          const btn = document.createElement('button');
+          btn.className = `rating-btn ${level}`;
+          btn.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+          btn.addEventListener('click', () => {
+            const isActive = btn.classList.contains('active');
+            buttons.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+            ['rated-high', 'rated-medium', 'rated-low'].forEach(c => card.classList.remove(c));
+            if (!isActive) {
+              btn.classList.add('active');
+              card.classList.add(`rated-${level}`);
+            }
+          });
+          buttons.appendChild(btn);
         });
-        container.appendChild(btn);
+
+        card.appendChild(label);
+        card.appendChild(buttons);
+        cardsEl.appendChild(card);
       });
+
+      framework.appendChild(section);
     });
   </script>
+
 </body>
 </html>
