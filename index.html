@@ -62,6 +62,22 @@
       color: var(--text);
     }
 
+    .home-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+
+    .home-link:hover { color: var(--text); }
+    .home-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .crumb-sep { color: #4a4e66; font-weight: 400; }
+
     .leaf {
       width: 20px;
       height: 20px;
@@ -306,6 +322,7 @@
     @media (max-width: 720px) {
       .topbar { flex-wrap: wrap; padding: 14px 16px; }
       .topbar-controls { width: 100%; }
+      .home-text { display: none; }
       .name-input { flex: 1; width: auto; min-width: 0; }
       .topbar-controls .btn-export,
       .topbar-controls .btn-reset { padding: 9px 12px; white-space: nowrap; }
@@ -358,7 +375,11 @@
 
   <div class="topbar">
     <div class="topbar-title">
-      <svg class="leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      <a class="home-link" href="https://simon-development-toolkit.netlify.app/" title="Back to Development Toolkit home">
+        <svg class="leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        <span class="home-text">Development Toolkit</span>
+      </a>
+      <span class="crumb-sep">/</span>
       <span>People Development Framework</span>
     </div>
     <div class="topbar-controls">
