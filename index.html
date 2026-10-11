@@ -124,28 +124,35 @@
     /* ── Header ── */
     .header {
       background: linear-gradient(180deg, var(--header) 0%, #141623 100%);
-      padding: 40px 40px 44px;
+      padding: 16px 40px 18px;
       border-bottom: 1px solid var(--border);
     }
 
+    .header-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
     .header h1 {
-      font-size: 30px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
       color: var(--text);
     }
 
     .header .subtitle {
-      font-size: 15px;
+      font-size: 13px;
       color: var(--text-muted);
-      margin-top: 8px;
+      margin-top: 4px;
     }
 
     .progress {
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-top: 28px;
+      margin-top: 12px;
     }
 
     .progress-track {
@@ -171,147 +178,103 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* ── Tabs ── */
-    .tabs {
-      display: flex;
-      gap: 4px;
-      padding: 0 40px;
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-      scrollbar-width: none;
+    /* ── Areas grid ── */
+    .page-content {
+      padding: 18px 40px 24px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
     }
 
-    .tabs::-webkit-scrollbar { display: none; }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 14px 12px;
+      transition: border-color 0.2s;
+    }
 
-    .tab {
+    .panel.complete { border-color: rgba(74,222,128,0.35); }
+
+    .panel-head {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      padding: 18px 22px 16px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: color 0.15s, border-color 0.15s;
     }
-
-    .tab:hover { color: var(--text-body); }
-
-    .tab .tab-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #4a4e66;
-      transition: background 0.15s;
-    }
-
-    .tab.complete .tab-dot { background: var(--stage-text); }
-
-    .tab.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-    }
-
-    .tab.active .tab-dot { background: var(--accent); }
-
-    /* ── Section ── */
-    .page-content {
-      padding: 44px 40px 64px;
-      max-width: 1320px;
-    }
-
-    .panel { display: none; }
-    .panel.active { display: block; }
 
     .stage-badge {
       display: inline-block;
       background: var(--stage-bg);
       color: var(--stage-text);
-      font-size: 12px;
+      font-size: 10.5px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.4px;
       text-transform: uppercase;
-      padding: 7px 12px;
-      border-radius: 6px;
+      padding: 4px 8px;
+      border-radius: 5px;
+      flex-shrink: 0;
     }
 
     .panel h2 {
-      font-size: 28px;
+      font-size: 17px;
       font-weight: 800;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.2px;
       color: var(--text);
-      margin-top: 22px;
+      flex: 1;
     }
 
-    .panel .panel-desc {
-      font-size: 15px;
+    .panel-count {
+      font-size: 12px;
       color: var(--text-muted);
-      margin-top: 10px;
+      font-variant-numeric: tabular-nums;
     }
 
     .cards {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      margin-top: 30px;
+      gap: 5px;
+      margin-top: 12px;
     }
 
-    /* ── Competency cards ── */
+    /* ── Competency rows ── */
     .card {
-      background: var(--card);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--input);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px 28px;
-      transition: border-color 0.2s, background 0.2s;
+      border-radius: 9px;
+      padding: 5px 6px 5px 12px;
+      transition: border-color 0.2s;
     }
 
     .card:hover { border-color: var(--border-hover); }
 
     .card-label {
-      font-size: 16px;
+      flex: 1;
+      font-size: 13.5px;
       font-weight: 500;
       color: var(--text-body);
-      line-height: 1.5;
+      line-height: 1.35;
     }
-
-    .rating-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .scale-label {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.4;
-      width: 90px;
-    }
-
-    .scale-label.end { text-align: right; }
 
     .rating-buttons {
       display: flex;
-      gap: 10px;
+      gap: 4px;
+      flex-shrink: 0;
     }
 
     .rating-btn {
-      min-width: 88px;
-      height: 44px;
-      padding: 0 16px;
-      background: var(--input);
+      width: 28px;
+      height: 28px;
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 7px;
       color: var(--text-muted);
       font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
@@ -326,32 +289,31 @@
     .card.rated-medium { border-color: rgba(245,158,11,0.45); }
     .card.rated-low    { border-color: rgba(239,68,68,0.45); }
 
-    .panel-nav {
+    .legend {
       display: flex;
-      justify-content: space-between;
-      margin-top: 30px;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
     }
 
-    .panel-nav .btn-reset[hidden],
-    .panel-nav .btn-export[hidden] { visibility: hidden; display: inline-block; }
+    .legend b { color: var(--text-body); font-weight: 600; }
 
-    /* ── Small screens ── */
+    /* ── Narrower screens ── */
+    @media (max-width: 1180px) {
+      .page-content { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
     @media (max-width: 720px) {
       .topbar { flex-wrap: wrap; padding: 14px 16px; }
       .topbar-controls { width: 100%; }
       .name-input { flex: 1; width: auto; min-width: 0; }
       .topbar-controls .btn-export,
       .topbar-controls .btn-reset { padding: 9px 12px; white-space: nowrap; }
-      .header { padding: 28px 16px 32px; }
-      .header h1 { font-size: 24px; }
-      .tabs { padding: 0 8px; }
-      .tab { padding: 16px 14px 14px; }
-      .page-content { padding: 32px 16px 48px; }
-      .card { padding: 20px; }
-      .scale-label { display: none; }
-      .rating-row { justify-content: flex-start; }
-      .rating-buttons { width: 100%; }
-      .rating-btn { flex: 1; min-width: 0; padding: 0; }
+      .header { padding: 20px 16px; }
+      .header h1 { font-size: 22px; }
+      .header-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .page-content { grid-template-columns: 1fr; padding: 16px 16px 40px; }
+      .rating-btn { width: 36px; height: 36px; }
     }
 
     /* ── Print / Export PDF ── */
@@ -367,7 +329,7 @@
         print-color-adjust: exact;
       }
 
-      .topbar, .tabs, .progress, .panel-nav { display: none !important; }
+      .topbar, .progress, .legend { display: none !important; }
 
       .header { padding: 0 0 8px; background: none; border: none; }
       .header h1 { font-size: 15px; }
@@ -375,42 +337,20 @@
 
       .page-content {
         padding: 0;
-        max-width: none;
-        display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
       }
 
-      .panel {
-        display: block !important;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 6px 8px;
-        break-inside: avoid;
-      }
-
+      .panel { padding: 6px 8px; border-radius: 6px; break-inside: avoid; }
       .stage-badge { font-size: 7px; padding: 2px 5px; letter-spacing: 1px; }
-      .panel h2 { font-size: 11px; margin-top: 3px; }
-      .panel .panel-desc { display: none; }
+      .panel h2 { font-size: 11px; }
+      .panel-count { display: none; }
 
       .cards { gap: 3px; margin-top: 5px; }
-
-      .card {
-        padding: 3px 6px;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        background: var(--input);
-      }
-
-      .card-label { font-size: 8px; flex: 1; line-height: 1.3; }
-      .rating-row { margin-top: 0; }
-      .scale-label { display: none; }
+      .card { padding: 3px 4px 3px 6px; gap: 6px; border-radius: 4px; }
+      .card-label { font-size: 8px; line-height: 1.3; }
       .rating-buttons { gap: 2px; }
-      .rating-btn { min-width: 0; height: auto; padding: 1px 4px; font-size: 7px; border-radius: 3px; }
-
+      .rating-btn { width: 14px; height: 13px; font-size: 7px; border-radius: 3px; }
     }
   </style>
 </head>
@@ -429,15 +369,18 @@
   </div>
 
   <div class="header">
-    <h1 id="headerTitle">People Development Framework</h1>
-    <p class="subtitle" id="headerSubtitle"></p>
+    <div class="header-row">
+      <div>
+        <h1 id="headerTitle">People Development Framework</h1>
+        <p class="subtitle" id="headerSubtitle"></p>
+      </div>
+      <div class="legend"><span><b>L</b> Low</span><span><b>M</b> Medium</span><span><b>H</b> High</span></div>
+    </div>
     <div class="progress">
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
       <span class="progress-label" id="progressLabel"></span>
     </div>
   </div>
-
-  <nav class="tabs" id="tabs"></nav>
 
   <div class="page-content" id="framework"></div>
 
@@ -496,60 +439,41 @@
 
     const totalCompetencies = categories.reduce((n, c) => n + c.competencies.length, 0);
     const framework = document.getElementById('framework');
-    const tabsEl = document.getElementById('tabs');
-    const tabs = [];
     const panels = [];
+    const levels = [
+      { key: 'low',    short: 'L', name: 'Low' },
+      { key: 'medium', short: 'M', name: 'Medium' },
+      { key: 'high',   short: 'H', name: 'High' }
+    ];
 
     document.getElementById('headerSubtitle').textContent =
       `Rate each competency — Low, Medium, or High · ${categories.length} areas · ${totalCompetencies} competencies`;
-
-    function showPanel(index) {
-      tabs.forEach((t, i) => t.classList.toggle('active', i === index));
-      panels.forEach((p, i) => p.classList.toggle('active', i === index));
-    }
 
     function updateProgress() {
       const rated = document.querySelectorAll('.rating-btn.active').length;
       document.getElementById('progressFill').style.width = `${(rated / totalCompetencies) * 100}%`;
       document.getElementById('progressLabel').textContent = `${rated} / ${totalCompetencies} rated`;
       panels.forEach((panel, i) => {
-        const complete = panel.querySelectorAll('.rating-btn.active').length === categories[i].competencies.length;
-        tabs[i].classList.toggle('complete', complete);
+        const count = panel.querySelectorAll('.rating-btn.active').length;
+        const total = categories[i].competencies.length;
+        panel.querySelector('.panel-count').textContent = `${count}/${total}`;
+        panel.classList.toggle('complete', count === total);
       });
     }
 
     categories.forEach((cat, catIndex) => {
-      // Tab
-      const tab = document.createElement('button');
-      tab.className = 'tab';
-      tab.innerHTML = `<span class="tab-dot"></span><span></span>`;
-      tab.lastChild.textContent = cat.name;
-      tab.addEventListener('click', () => showPanel(catIndex));
-      tabsEl.appendChild(tab);
-      tabs.push(tab);
-
-      // Panel
       const panel = document.createElement('section');
       panel.className = 'panel';
       panel.innerHTML = `
-        <span class="stage-badge">Area ${catIndex + 1}</span>
-        <h2></h2>
-        <p class="panel-desc"></p>
-        <div class="cards"></div>
-        <div class="panel-nav">
-          <button class="btn-reset prev-btn">← Previous</button>
-          <button class="btn-export next-btn">Next →</button>
+        <div class="panel-head">
+          <span class="stage-badge">Area ${catIndex + 1}</span>
+          <h2></h2>
+          <span class="panel-count"></span>
         </div>
+        <div class="cards"></div>
       `;
       panel.querySelector('h2').textContent = cat.name;
-      panel.querySelector('.panel-desc').textContent = cat.description;
-
-      const prev = panel.querySelector('.prev-btn');
-      const next = panel.querySelector('.next-btn');
-      prev.hidden = catIndex === 0;
-      next.hidden = catIndex === categories.length - 1;
-      prev.addEventListener('click', () => { showPanel(catIndex - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); });
-      next.addEventListener('click', () => { showPanel(catIndex + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      panel.querySelector('h2').title = cat.description;
 
       const cardsEl = panel.querySelector('.cards');
 
@@ -557,39 +481,34 @@
         const card = document.createElement('div');
         card.className = 'card';
 
-        const label = document.createElement('p');
+        const label = document.createElement('span');
         label.className = 'card-label';
         label.textContent = comp;
-
-        const row = document.createElement('div');
-        row.className = 'rating-row';
-        row.innerHTML = `<span class="scale-label">Needs<br>Development</span>`;
 
         const buttons = document.createElement('div');
         buttons.className = 'rating-buttons';
 
-        ['low', 'medium', 'high'].forEach(level => {
+        levels.forEach(level => {
           const btn = document.createElement('button');
-          btn.className = `rating-btn ${level}`;
-          btn.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+          btn.className = `rating-btn ${level.key}`;
+          btn.textContent = level.short;
+          btn.title = level.name;
+          btn.setAttribute('aria-label', `${comp}: ${level.name}`);
           btn.addEventListener('click', () => {
             const isActive = btn.classList.contains('active');
             buttons.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
             ['rated-high', 'rated-medium', 'rated-low'].forEach(c => card.classList.remove(c));
             if (!isActive) {
               btn.classList.add('active');
-              card.classList.add(`rated-${level}`);
+              card.classList.add(`rated-${level.key}`);
             }
             updateProgress();
           });
           buttons.appendChild(btn);
         });
 
-        row.appendChild(buttons);
-        row.insertAdjacentHTML('beforeend', `<span class="scale-label end">Real<br>Strength</span>`);
-
         card.appendChild(label);
-        card.appendChild(row);
+        card.appendChild(buttons);
         cardsEl.appendChild(card);
       });
 
@@ -597,7 +516,6 @@
       panels.push(panel);
     });
 
-    showPanel(0);
     updateProgress();
 
     // Reset
@@ -608,7 +526,6 @@
       });
       document.getElementById('nameInput').value = '';
       updateProgress();
-      showPanel(0);
     });
 
     // Export PDF
