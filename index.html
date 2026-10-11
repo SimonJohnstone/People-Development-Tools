@@ -4,228 +4,271 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>People Development Framework</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:           #1a1520;
-      --surface:      #231d2e;
-      --card:         #2a2438;
-      --accent:       #e05550;
-      --text:         #e8e0f0;
-      --text-muted:   #8880a0;
-      --border:       #3a3248;
-      --high-color:   #4caf70;
-      --med-color:    #e6a020;
-      --low-color:    #e05550;
+      --bg:          #f6f3ee;
+      --card:        #ffffff;
+      --ink:         #1c1a18;
+      --text:        #2b2825;
+      --text-muted:  #6f6a64;
+      --text-faint:  #c2bdb6;
+      --border:      #e6e1da;
+      --border-btn:  #e2ddd6;
+      --track:       #e4e0da;
+      --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+      --sans:  'DM Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Inter', Arial, sans-serif;
+      font-family: var(--sans);
       background: var(--bg);
       color: var(--text);
-      padding: 0;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Top nav bar */
-    .topbar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #120f1a;
-      padding: 14px 24px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 56px 16px 80px;
     }
 
-    .topbar-title {
-      flex: 1;
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
     }
 
-    .topbar-title h1 {
-      font-size: 20px;
+    .header h1 {
+      font-family: var(--serif);
+      font-size: clamp(30px, 5vw, 42px);
       font-weight: 700;
-      color: var(--accent);
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      line-height: 1.15;
     }
 
-    .topbar-title p {
-      font-size: 12px;
+    .header p {
+      font-size: 17px;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 10px;
     }
 
-    .topbar-controls {
+    .header-actions {
       display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
       align-items: center;
       gap: 10px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 15px 28px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .btn svg { width: 20px; height: 20px; }
+
+    .btn-primary {
+      background: var(--ink);
+      border: 1.5px solid var(--ink);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: #3a3632; border-color: #3a3632; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--border-btn);
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover { background: var(--card); color: var(--ink); }
+
+    /* Name field */
+    .name-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+
+    .name-card label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
     }
 
     .name-input {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 14px;
-      color: var(--text);
-      font-size: 13px;
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: transparent;
       font-family: inherit;
-      width: 200px;
+      font-size: 17px;
+      color: var(--ink);
       outline: none;
-      transition: border-color 0.2s;
     }
 
-    .name-input::placeholder { color: var(--text-muted); font-style: italic; }
-    .name-input:focus { border-color: var(--accent); }
+    .name-input::placeholder { color: var(--text-faint); }
 
-    .btn-export {
-      background: var(--accent);
-      border: 1px solid var(--accent);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      border-radius: 8px;
-      padding: 9px 18px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.15s;
+    /* Progress */
+    .progress {
+      margin: 26px 0 32px;
     }
 
-    .btn-export:hover { background: #c94540; border-color: #c94540; }
-
-    .btn-reset {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 9px 18px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .btn-reset:hover { background: var(--card); color: var(--text); }
-
-    .page-content {
-      padding: 28px 24px;
-    }
-
-    .framework {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    /* Category section */
-    .category {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    .progress-track {
+      height: 5px;
+      background: var(--track);
+      border-radius: 99px;
       overflow: hidden;
     }
 
-    .category-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 16px;
-      border-bottom: 1px solid var(--border);
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--ink);
+      border-radius: 99px;
+      transition: width 0.25s ease;
     }
 
-    .category-header h2 {
-      font-size: 11.5px;
+    .progress-count {
+      text-align: right;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Categories */
+    .framework {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .category {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 34px 36px 26px;
+    }
+
+    .category-eyebrow {
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 1.8px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--text);
-      flex: 1;
+      color: var(--text-muted);
     }
 
-    .category-badge {
-      background: var(--accent);
-      color: #fff;
-      font-size: 11px;
+    .category h2 {
+      font-family: var(--serif);
+      font-size: 27px;
       font-weight: 700;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
+      color: var(--ink);
+      margin-top: 8px;
+      line-height: 1.2;
+    }
+
+    .competencies {
+      margin-top: 18px;
+    }
+
+    .competency {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 20px;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .competency-label {
+      flex: 1;
+      font-size: 16.5px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .rating-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 108px);
+      gap: 10px;
       flex-shrink: 0;
     }
 
-    /* Cards */
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 12px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 10px 10px;
-      flex: 1 1 130px;
-      min-width: 120px;
+    .rating-btn {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      transition: border-color 0.2s, background 0.2s;
-      cursor: default;
-    }
-
-    .card:hover {
-      border-color: #5a5068;
-    }
-
-    .card-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-      flex: 1;
-      line-height: 1.45;
-    }
-
-    /* Rated state tints */
-    .card.rated-high   { background: rgba(76,175,112,0.35); border-color: var(--high-color); }
-    .card.rated-medium { background: rgba(230,160,32,0.35); border-color: var(--med-color); }
-    .card.rated-low    { background: rgba(224,85,80,0.35);  border-color: var(--low-color); }
-
-    /* Rating buttons */
-    .rating-buttons {
-      display: flex;
-      gap: 4px;
-    }
-
-    .rating-btn {
-      flex: 1;
-      border: 1px solid currentColor;
-      background: transparent;
-      border-radius: 4px;
-      padding: 3px 0;
-      font-size: 10px;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 2px solid var(--border-btn);
+      border-radius: 12px;
+      padding: 12px 6px 11px;
+      font-family: inherit;
+      font-size: 12.5px;
       font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
     }
 
-    .rating-btn.high,
-    .rating-btn.medium,
-    .rating-btn.low    { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .rating-btn svg {
+      width: 18px;
+      height: 18px;
+      color: var(--ink);
+    }
 
-    .rating-btn.active.high   { background: var(--high-color); color: #fff; border-color: var(--high-color); }
-    .rating-btn.active.medium { background: var(--med-color);  color: #fff; border-color: var(--med-color); }
-    .rating-btn.active.low    { background: var(--low-color);  color: #fff; border-color: var(--low-color); }
+    .rating-btn:hover:not(.active) { border-color: #c9c3bb; }
 
-    .rating-btn:hover:not(.active) { opacity: 0.65; }
+    .rating-btn.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
 
-    /* ── Print / Export PDF ── */
+    .rating-btn.active svg { color: #fff; }
+
+    .rating-btn:focus-visible,
+    .btn:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 640px) {
+      .page { padding-top: 40px; }
+      .header p { font-size: 15px; }
+      .category { padding: 26px 20px 18px; border-radius: 16px; }
+      .category h2 { font-size: 23px; }
+      .competency { flex-direction: column; align-items: stretch; gap: 12px; }
+      .rating-buttons { grid-template-columns: repeat(3, 1fr); }
+      .name-card { padding: 16px 18px; }
+    }
+
+    .print-legend { display: none; }
+
+    /* ── Print / Export PDF: one A4 landscape page ── */
     @media print {
       @page {
         size: A4 landscape;
@@ -233,84 +276,115 @@
       }
 
       body {
-        background: #1a1520 !important;
+        background: var(--bg) !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
 
-      .topbar { display: none; }
+      .page { max-width: none; padding: 0; }
 
-      .page-content { padding: 0; }
+      .header-actions,
+      .name-card,
+      .progress,
+      .header p { display: none; }
 
-      /* Print header */
-      .page-content::before {
+      .header { margin-bottom: 12px; }
+
+      .header h1 { font-size: 24px; }
+
+      .header h1::after {
         content: attr(data-name);
         display: block;
-        font-size: 14px;
-        font-weight: 700;
-        color: #e05550;
-        margin-bottom: 8px;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-top: 3px;
       }
 
+      .print-legend {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 6px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .print-legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+      .print-legend svg { width: 11px; height: 11px; color: var(--ink); }
+
       .framework {
-        gap: 6px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
       }
 
       .category {
-        border-radius: 6px;
+        padding: 14px 16px 8px;
+        border-radius: 8px;
         break-inside: avoid;
       }
 
-      .category-header {
-        padding: 6px 10px;
-      }
+      .category-eyebrow { font-size: 8px; letter-spacing: 1.4px; }
 
-      .category-header h2 {
-        font-size: 9px;
-        letter-spacing: 1.2px;
-      }
+      .category h2 { font-size: 17px; margin-top: 3px; }
 
-      .cards {
-        gap: 5px;
-        padding: 6px;
-      }
+      .competencies { margin-top: 8px; }
 
-      .card {
-        padding: 6px 6px 5px;
-        gap: 5px;
-        border-radius: 5px;
-        flex: 1 1 100px;
-        min-width: 90px;
-      }
+      .competency { gap: 10px; padding: 6px 0; }
 
-      .card-label {
-        font-size: 9px;
-      }
+      .competency-label { font-size: 11px; line-height: 1.3; }
+
+      .rating-buttons { grid-template-columns: repeat(3, 26px); gap: 4px; }
 
       .rating-btn {
-        font-size: 8px;
-        padding: 2px 0;
+        padding: 4px 0;
+        border-width: 1px;
+        border-radius: 5px;
+        gap: 0;
+        font-size: 0;
+        letter-spacing: 0;
       }
+
+      .rating-btn svg { width: 11px; height: 11px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="topbar">
-    <div class="topbar-title">
-      <h1>People Development Framework</h1>
-      <p>Rate each competency — High, Medium, or Low</p>
-    </div>
-    <div class="topbar-controls">
-      <input class="name-input" id="nameInput" type="text" placeholder="Enter your name" />
-      <button class="btn-export" id="exportBtn">Export PDF</button>
-      <button class="btn-reset" id="resetBtn">Reset</button>
-    </div>
-  </div>
+  <main class="page">
+    <header class="header">
+      <h1 id="pageTitle" data-name="">People Development Framework</h1>
+      <p>Rate each competency as you see it today — Low, Medium or High.</p>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="exportBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v12" /><path d="M7 10l5 5 5-5" /><path d="M5 21h14" />
+          </svg>
+          Export PDF
+        </button>
+        <button class="btn btn-ghost" id="resetBtn">Reset</button>
+      </div>
+      <div class="print-legend" id="printLegend"></div>
+    </header>
 
-  <div class="page-content">
+    <div class="name-card">
+      <label for="nameInput">Name</label>
+      <input class="name-input" id="nameInput" type="text" placeholder="Enter your name" autocomplete="name" />
+    </div>
+
+    <div class="progress">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-count" id="progressCount">0 / 0</div>
+    </div>
+
     <div class="framework" id="framework"></div>
-  </div>
+  </main>
 
   <script>
     const categories = [
@@ -359,70 +433,106 @@
       }
     ];
 
-    const framework = document.getElementById('framework');
+    // Empty, half and full circles, matching the Not yet / Getting there / Strong scale
+    const levels = [
+      { key: 'low',    label: 'Low',
+        icon: '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>' },
+      { key: 'medium', label: 'Medium',
+        icon: '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 2a8 8 0 0 1 0 16z" fill="currentColor"/></svg>' },
+      { key: 'high',   label: 'High',
+        icon: '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="5" fill="currentColor"/></svg>' }
+    ];
 
-    categories.forEach(cat => {
-      const section = document.createElement('div');
+    document.getElementById('printLegend').innerHTML =
+      levels.map(l => `<span>${l.icon}${l.label}</span>`).join('');
+
+    const framework = document.getElementById('framework');
+    const progressFill = document.getElementById('progressFill');
+    const progressCount = document.getElementById('progressCount');
+    const total = categories.reduce((n, cat) => n + cat.competencies.length, 0);
+
+    function updateProgress() {
+      const rated = document.querySelectorAll('.rating-btn.active').length;
+      progressFill.style.width = `${(rated / total) * 100}%`;
+      progressCount.textContent = `${rated} / ${total}`;
+    }
+
+    categories.forEach((cat, i) => {
+      const section = document.createElement('section');
       section.className = 'category';
 
-      section.innerHTML = `
-        <div class="category-header">
-          <h2>${cat.name}</h2>
-        </div>
-        <div class="cards"></div>
-      `;
+      const eyebrow = document.createElement('div');
+      eyebrow.className = 'category-eyebrow';
+      eyebrow.textContent = `Category ${i + 1}`;
 
-      const cardsEl = section.querySelector('.cards');
+      const heading = document.createElement('h2');
+      heading.textContent = cat.name;
+
+      const list = document.createElement('div');
+      list.className = 'competencies';
 
       cat.competencies.forEach(comp => {
-        const card = document.createElement('div');
-        card.className = 'card';
+        const row = document.createElement('div');
+        row.className = 'competency';
 
         const label = document.createElement('span');
-        label.className = 'card-label';
+        label.className = 'competency-label';
         label.textContent = comp;
 
         const buttons = document.createElement('div');
         buttons.className = 'rating-buttons';
+        buttons.setAttribute('role', 'group');
+        buttons.setAttribute('aria-label', comp);
 
-        ['high', 'medium', 'low'].forEach(level => {
+        levels.forEach(level => {
           const btn = document.createElement('button');
-          btn.className = `rating-btn ${level}`;
-          btn.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+          btn.className = `rating-btn ${level.key}`;
+          btn.type = 'button';
+          btn.setAttribute('aria-pressed', 'false');
+          btn.innerHTML = `${level.icon}<span>${level.label}</span>`;
           btn.addEventListener('click', () => {
             const isActive = btn.classList.contains('active');
-            buttons.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
-            ['rated-high', 'rated-medium', 'rated-low'].forEach(c => card.classList.remove(c));
+            buttons.querySelectorAll('.rating-btn').forEach(b => {
+              b.classList.remove('active');
+              b.setAttribute('aria-pressed', 'false');
+            });
             if (!isActive) {
               btn.classList.add('active');
-              card.classList.add(`rated-${level}`);
+              btn.setAttribute('aria-pressed', 'true');
             }
+            updateProgress();
           });
           buttons.appendChild(btn);
         });
 
-        card.appendChild(label);
-        card.appendChild(buttons);
-        cardsEl.appendChild(card);
+        row.appendChild(label);
+        row.appendChild(buttons);
+        list.appendChild(row);
       });
 
+      section.appendChild(eyebrow);
+      section.appendChild(heading);
+      section.appendChild(list);
       framework.appendChild(section);
     });
+
+    updateProgress();
+
     // Reset
     document.getElementById('resetBtn').addEventListener('click', () => {
-      document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.card').forEach(c => {
-        c.classList.remove('rated-high', 'rated-medium', 'rated-low');
+      document.querySelectorAll('.rating-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
       });
       document.getElementById('nameInput').value = '';
+      updateProgress();
     });
 
     // Export PDF
     document.getElementById('exportBtn').addEventListener('click', () => {
       const name = document.getElementById('nameInput').value.trim();
-      const content = document.querySelector('.page-content');
       const originalTitle = document.title;
-      content.setAttribute('data-name', name ? `${name} — People Development Framework` : 'People Development Framework');
+      document.getElementById('pageTitle').setAttribute('data-name', name);
       if (name) document.title = `${name} — People Development Framework`;
       window.print();
       document.title = originalTitle;
