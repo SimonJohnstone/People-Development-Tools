@@ -4,37 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>People Development Framework</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:           #1a1520;
-      --surface:      #231d2e;
-      --card:         #2a2438;
-      --accent:       #e05550;
-      --text:         #e8e0f0;
-      --text-muted:   #8880a0;
-      --border:       #3a3248;
-      --high-color:   #4caf70;
-      --med-color:    #e6a020;
-      --low-color:    #e05550;
+      --bg:           #11121b;
+      --topbar:       #0b0c13;
+      --header:       #181a27;
+      --card:         #1a1d2c;
+      --input:        #0f1018;
+      --accent:       #8b7cf6;
+      --accent-hover: #7a6aef;
+      --text:         #f1f2f7;
+      --text-body:    #d7d9e4;
+      --text-muted:   #8a8fa8;
+      --border:       #272a3c;
+      --border-hover: #383c55;
+      --stage-bg:     #13281d;
+      --stage-text:   #4ade80;
+      --high-color:   #22c55e;
+      --med-color:    #f59e0b;
+      --low-color:    #ef4444;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Inter', Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      padding: 0;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Top nav bar */
+    /* ── Top bar ── */
     .topbar {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: #120f1a;
-      padding: 14px 24px;
+      gap: 12px;
+      background: var(--topbar);
+      padding: 16px 40px;
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
@@ -43,18 +53,20 @@
 
     .topbar-title {
       flex: 1;
-    }
-
-    .topbar-title h1 {
-      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
       font-weight: 700;
-      color: var(--accent);
+      color: var(--text);
     }
 
-    .topbar-title p {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
     }
 
     .topbar-controls {
@@ -64,7 +76,7 @@
     }
 
     .name-input {
-      background: var(--surface);
+      background: var(--input);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 9px 14px;
@@ -76,7 +88,7 @@
       transition: border-color 0.2s;
     }
 
-    .name-input::placeholder { color: var(--text-muted); font-style: italic; }
+    .name-input::placeholder { color: var(--text-muted); }
     .name-input:focus { border-color: var(--accent); }
 
     .btn-export {
@@ -84,7 +96,7 @@
       border: 1px solid var(--accent);
       color: #fff;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       border-radius: 8px;
       padding: 9px 18px;
       cursor: pointer;
@@ -92,10 +104,10 @@
       transition: background 0.15s;
     }
 
-    .btn-export:hover { background: #c94540; border-color: #c94540; }
+    .btn-export:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 
     .btn-reset {
-      background: var(--surface);
+      background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
       font-size: 13px;
@@ -104,126 +116,243 @@
       padding: 9px 18px;
       cursor: pointer;
       font-family: inherit;
-      transition: background 0.15s, color 0.15s;
+      transition: border-color 0.15s, color 0.15s;
     }
 
-    .btn-reset:hover { background: var(--card); color: var(--text); }
+    .btn-reset:hover { border-color: var(--border-hover); color: var(--text); }
 
-    .page-content {
-      padding: 28px 24px;
-    }
-
-    .framework {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    /* Category section */
-    .category {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .category-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 16px;
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(180deg, var(--header) 0%, #141623 100%);
+      padding: 40px 40px 44px;
       border-bottom: 1px solid var(--border);
     }
 
-    .category-header h2 {
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
+    .header h1 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       color: var(--text);
-      flex: 1;
     }
 
-    .category-badge {
-      background: var(--accent);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
+    .header .subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .progress {
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      gap: 14px;
+      margin-top: 28px;
     }
 
-    /* Cards */
+    .progress-track {
+      flex: 1;
+      height: 4px;
+      background: #262938;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 0 40px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 18px 22px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .tab:hover { color: var(--text-body); }
+
+    .tab .tab-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4a4e66;
+      transition: background 0.15s;
+    }
+
+    .tab.complete .tab-dot { background: var(--stage-text); }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab.active .tab-dot { background: var(--accent); }
+
+    /* ── Section ── */
+    .page-content {
+      padding: 44px 40px 64px;
+      max-width: 1320px;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .stage-badge {
+      display: inline-block;
+      background: var(--stage-bg);
+      color: var(--stage-text);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 7px 12px;
+      border-radius: 6px;
+    }
+
+    .panel h2 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--text);
+      margin-top: 22px;
+    }
+
+    .panel .panel-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
     .cards {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 12px;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 30px;
     }
 
+    /* ── Competency cards ── */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 10px 10px;
-      flex: 1 1 130px;
-      min-width: 120px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      border-radius: 14px;
+      padding: 24px 28px;
       transition: border-color 0.2s, background 0.2s;
-      cursor: default;
     }
 
-    .card:hover {
-      border-color: #5a5068;
-    }
+    .card:hover { border-color: var(--border-hover); }
 
     .card-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-      flex: 1;
-      line-height: 1.45;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-body);
+      line-height: 1.5;
     }
 
-    /* Rated state tints */
-    .card.rated-high   { background: rgba(76,175,112,0.35); border-color: var(--high-color); }
-    .card.rated-medium { background: rgba(230,160,32,0.35); border-color: var(--med-color); }
-    .card.rated-low    { background: rgba(224,85,80,0.35);  border-color: var(--low-color); }
+    .rating-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+    }
 
-    /* Rating buttons */
+    .scale-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      width: 90px;
+    }
+
+    .scale-label.end { text-align: right; }
+
     .rating-buttons {
       display: flex;
-      gap: 4px;
+      gap: 10px;
     }
 
     .rating-btn {
-      flex: 1;
-      border: 1px solid currentColor;
-      background: transparent;
-      border-radius: 4px;
-      padding: 3px 0;
-      font-size: 10px;
-      font-weight: 700;
+      min-width: 88px;
+      height: 44px;
+      padding: 0 16px;
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
 
-    .rating-btn.high,
-    .rating-btn.medium,
-    .rating-btn.low    { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .rating-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
 
-    .rating-btn.active.high   { background: var(--high-color); color: #fff; border-color: var(--high-color); }
-    .rating-btn.active.medium { background: var(--med-color);  color: #fff; border-color: var(--med-color); }
-    .rating-btn.active.low    { background: var(--low-color);  color: #fff; border-color: var(--low-color); }
+    .rating-btn.active.high   { background: var(--high-color); border-color: var(--high-color); color: #fff; }
+    .rating-btn.active.medium { background: var(--med-color);  border-color: var(--med-color);  color: #fff; }
+    .rating-btn.active.low    { background: var(--low-color);  border-color: var(--low-color);  color: #fff; }
 
-    .rating-btn:hover:not(.active) { opacity: 0.65; }
+    .card.rated-high   { border-color: rgba(34,197,94,0.45); }
+    .card.rated-medium { border-color: rgba(245,158,11,0.45); }
+    .card.rated-low    { border-color: rgba(239,68,68,0.45); }
+
+    .panel-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .panel-nav .btn-reset[hidden],
+    .panel-nav .btn-export[hidden] { visibility: hidden; display: inline-block; }
+
+    /* ── Small screens ── */
+    @media (max-width: 720px) {
+      .topbar { flex-wrap: wrap; padding: 14px 16px; }
+      .topbar-controls { width: 100%; }
+      .name-input { flex: 1; width: auto; min-width: 0; }
+      .topbar-controls .btn-export,
+      .topbar-controls .btn-reset { padding: 9px 12px; white-space: nowrap; }
+      .header { padding: 28px 16px 32px; }
+      .header h1 { font-size: 24px; }
+      .tabs { padding: 0 8px; }
+      .tab { padding: 16px 14px 14px; }
+      .page-content { padding: 32px 16px 48px; }
+      .card { padding: 20px; }
+      .scale-label { display: none; }
+      .rating-row { justify-content: flex-start; }
+      .rating-buttons { width: 100%; }
+      .rating-btn { flex: 1; min-width: 0; padding: 0; }
+    }
 
     /* ── Print / Export PDF ── */
     @media print {
@@ -233,64 +362,55 @@
       }
 
       body {
-        background: #1a1520 !important;
+        background: var(--bg) !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
 
-      .topbar { display: none; }
+      .topbar, .tabs, .progress, .panel-nav { display: none !important; }
 
-      .page-content { padding: 0; }
+      .header { padding: 0 0 8px; background: none; border: none; }
+      .header h1 { font-size: 15px; }
+      .header .subtitle { font-size: 9px; margin-top: 2px; }
 
-      /* Print header */
-      .page-content::before {
-        content: attr(data-name);
-        display: block;
-        font-size: 14px;
-        font-weight: 700;
-        color: #e05550;
-        margin-bottom: 8px;
-      }
-
-      .framework {
+      .page-content {
+        padding: 0;
+        max-width: none;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 6px;
       }
 
-      .category {
+      .panel {
+        display: block !important;
+        background: var(--card);
+        border: 1px solid var(--border);
         border-radius: 6px;
+        padding: 6px 8px;
         break-inside: avoid;
       }
 
-      .category-header {
-        padding: 6px 10px;
-      }
+      .stage-badge { font-size: 7px; padding: 2px 5px; letter-spacing: 1px; }
+      .panel h2 { font-size: 11px; margin-top: 3px; }
+      .panel .panel-desc { display: none; }
 
-      .category-header h2 {
-        font-size: 9px;
-        letter-spacing: 1.2px;
-      }
-
-      .cards {
-        gap: 5px;
-        padding: 6px;
-      }
+      .cards { gap: 3px; margin-top: 5px; }
 
       .card {
-        padding: 6px 6px 5px;
-        gap: 5px;
-        border-radius: 5px;
-        flex: 1 1 100px;
-        min-width: 90px;
+        padding: 3px 6px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--input);
       }
 
-      .card-label {
-        font-size: 9px;
-      }
+      .card-label { font-size: 8px; flex: 1; line-height: 1.3; }
+      .rating-row { margin-top: 0; }
+      .scale-label { display: none; }
+      .rating-buttons { gap: 2px; }
+      .rating-btn { min-width: 0; height: auto; padding: 1px 4px; font-size: 7px; border-radius: 3px; }
 
-      .rating-btn {
-        font-size: 8px;
-        padding: 2px 0;
-      }
     }
   </style>
 </head>
@@ -298,8 +418,8 @@
 
   <div class="topbar">
     <div class="topbar-title">
-      <h1>People Development Framework</h1>
-      <p>Rate each competency — High, Medium, or Low</p>
+      <span class="dot"></span>
+      <span>People Development Framework</span>
     </div>
     <div class="topbar-controls">
       <input class="name-input" id="nameInput" type="text" placeholder="Enter your name" />
@@ -308,14 +428,24 @@
     </div>
   </div>
 
-  <div class="page-content">
-    <div class="framework" id="framework"></div>
+  <div class="header">
+    <h1 id="headerTitle">People Development Framework</h1>
+    <p class="subtitle" id="headerSubtitle"></p>
+    <div class="progress">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-label" id="progressLabel"></span>
+    </div>
   </div>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <div class="page-content" id="framework"></div>
 
   <script>
     const categories = [
       {
         name: 'Growth Mindset',
+        description: 'Do I stay curious, seek feedback, and keep looking for ways to improve?',
         competencies: [
           'Curious', 'Open to Feedback', 'Experimentation',
           'Focusing on Solutions', 'Make work Better'
@@ -323,6 +453,7 @@
       },
       {
         name: 'Trusted',
+        description: 'Do people trust me to be open, honest, and fair — even when it is difficult?',
         competencies: [
           'Open and Transparent', 'Listen and Gives Candid Feedback',
           'Open / Not Shying away from Tough Conversations',
@@ -331,10 +462,12 @@
       },
       {
         name: 'Team Focused',
+        description: 'Do I treat others with respect and make space for different views?',
         competencies: ['Respectful', 'Empathy', 'Open to different Perspectives']
       },
       {
         name: 'Courageous',
+        description: 'Do I make the tough calls, own the outcome, and speak up with new ideas?',
         competencies: [
           'Willingness to make critical decisions', 'Ownership',
           'Taking calculated risks', 'Combining Data and Experience',
@@ -343,6 +476,7 @@
       },
       {
         name: 'Resourceful',
+        description: 'Do I find a way through challenges, prioritise well, and keep things moving?',
         competencies: [
           'Facing Challenges Head on', 'Creative', 'Resilient',
           'Ability to Prioritise', 'Simplification', 'Move things Forward'
@@ -350,6 +484,7 @@
       },
       {
         name: 'Outcome Focused',
+        description: 'Do I keep the customer at the centre and adapt quickly to deliver results?',
         competencies: [
           'Customer Centric View',
           'Internal Perspective View Balanced with External View',
@@ -359,33 +494,81 @@
       }
     ];
 
+    const totalCompetencies = categories.reduce((n, c) => n + c.competencies.length, 0);
     const framework = document.getElementById('framework');
+    const tabsEl = document.getElementById('tabs');
+    const tabs = [];
+    const panels = [];
 
-    categories.forEach(cat => {
-      const section = document.createElement('div');
-      section.className = 'category';
+    document.getElementById('headerSubtitle').textContent =
+      `Rate each competency — Low, Medium, or High · ${categories.length} areas · ${totalCompetencies} competencies`;
 
-      section.innerHTML = `
-        <div class="category-header">
-          <h2>${cat.name}</h2>
-        </div>
+    function showPanel(index) {
+      tabs.forEach((t, i) => t.classList.toggle('active', i === index));
+      panels.forEach((p, i) => p.classList.toggle('active', i === index));
+    }
+
+    function updateProgress() {
+      const rated = document.querySelectorAll('.rating-btn.active').length;
+      document.getElementById('progressFill').style.width = `${(rated / totalCompetencies) * 100}%`;
+      document.getElementById('progressLabel').textContent = `${rated} / ${totalCompetencies} rated`;
+      panels.forEach((panel, i) => {
+        const complete = panel.querySelectorAll('.rating-btn.active').length === categories[i].competencies.length;
+        tabs[i].classList.toggle('complete', complete);
+      });
+    }
+
+    categories.forEach((cat, catIndex) => {
+      // Tab
+      const tab = document.createElement('button');
+      tab.className = 'tab';
+      tab.innerHTML = `<span class="tab-dot"></span><span></span>`;
+      tab.lastChild.textContent = cat.name;
+      tab.addEventListener('click', () => showPanel(catIndex));
+      tabsEl.appendChild(tab);
+      tabs.push(tab);
+
+      // Panel
+      const panel = document.createElement('section');
+      panel.className = 'panel';
+      panel.innerHTML = `
+        <span class="stage-badge">Area ${catIndex + 1}</span>
+        <h2></h2>
+        <p class="panel-desc"></p>
         <div class="cards"></div>
+        <div class="panel-nav">
+          <button class="btn-reset prev-btn">← Previous</button>
+          <button class="btn-export next-btn">Next →</button>
+        </div>
       `;
+      panel.querySelector('h2').textContent = cat.name;
+      panel.querySelector('.panel-desc').textContent = cat.description;
 
-      const cardsEl = section.querySelector('.cards');
+      const prev = panel.querySelector('.prev-btn');
+      const next = panel.querySelector('.next-btn');
+      prev.hidden = catIndex === 0;
+      next.hidden = catIndex === categories.length - 1;
+      prev.addEventListener('click', () => { showPanel(catIndex - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      next.addEventListener('click', () => { showPanel(catIndex + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+      const cardsEl = panel.querySelector('.cards');
 
       cat.competencies.forEach(comp => {
         const card = document.createElement('div');
         card.className = 'card';
 
-        const label = document.createElement('span');
+        const label = document.createElement('p');
         label.className = 'card-label';
         label.textContent = comp;
+
+        const row = document.createElement('div');
+        row.className = 'rating-row';
+        row.innerHTML = `<span class="scale-label">Needs<br>Development</span>`;
 
         const buttons = document.createElement('div');
         buttons.className = 'rating-buttons';
 
-        ['high', 'medium', 'low'].forEach(level => {
+        ['low', 'medium', 'high'].forEach(level => {
           const btn = document.createElement('button');
           btn.className = `rating-btn ${level}`;
           btn.textContent = level.charAt(0).toUpperCase() + level.slice(1);
@@ -397,17 +580,26 @@
               btn.classList.add('active');
               card.classList.add(`rated-${level}`);
             }
+            updateProgress();
           });
           buttons.appendChild(btn);
         });
 
+        row.appendChild(buttons);
+        row.insertAdjacentHTML('beforeend', `<span class="scale-label end">Real<br>Strength</span>`);
+
         card.appendChild(label);
-        card.appendChild(buttons);
+        card.appendChild(row);
         cardsEl.appendChild(card);
       });
 
-      framework.appendChild(section);
+      framework.appendChild(panel);
+      panels.push(panel);
     });
+
+    showPanel(0);
+    updateProgress();
+
     // Reset
     document.getElementById('resetBtn').addEventListener('click', () => {
       document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
@@ -415,17 +607,23 @@
         c.classList.remove('rated-high', 'rated-medium', 'rated-low');
       });
       document.getElementById('nameInput').value = '';
+      updateProgress();
+      showPanel(0);
     });
 
     // Export PDF
     document.getElementById('exportBtn').addEventListener('click', () => {
       const name = document.getElementById('nameInput').value.trim();
-      const content = document.querySelector('.page-content');
+      const heading = document.getElementById('headerTitle');
       const originalTitle = document.title;
-      content.setAttribute('data-name', name ? `${name} — People Development Framework` : 'People Development Framework');
-      if (name) document.title = `${name} — People Development Framework`;
+      const originalHeading = heading.textContent;
+      if (name) {
+        document.title = `${name} — People Development Framework`;
+        heading.textContent = document.title;
+      }
       window.print();
       document.title = originalTitle;
+      heading.textContent = originalHeading;
     });
   </script>
 
