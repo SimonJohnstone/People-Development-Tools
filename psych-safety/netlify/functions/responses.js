@@ -1,0 +1,84 @@
+// Server-side proxy for the survey's JSONbin storage.
+//
+// The JSONbin credentials live in Netlify environment variables, so they
+// never reach the browser:
+//   JSONBIN_MASTER_KEY  – JSONbin X-Master-Key (secret)
+//   JSONBIN_BIN_ID      – ID of the bin holding the responses array
+//
+// Endpoints (all at /.netlify/functions/responses):
+//   GET     → returns the responses array
+//   POST    → appends one response object (JSON body), returns { count }
+//   DELETE  → clears all responses
+//
+// The browser can no longer write arbitrary data to the bin: only append
+// a single, size-limited response, or clear (which the dashboard already offers).
+
+const JSONBIN = 'https://api.jsonbin.io/v3/b/';
+const MAX_RESPONSE_BYTES = 20 * 1024;
+
+const json = (statusCode, body) => ({
+  statusCode,
+  headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+  body: JSON.stringify(body),
+});
+
+exports.handler = async (event) => {
+  const key = process.env.JSONBIN_MASTER_KEY;
+  const bin = process.env.JSONBIN_BIN_ID;
+  if (!key || !bin) return json(503, { error: 'Shared storage is not configured.' });
+
+  const read = async () => {
+    const r = await fetch(JSONBIN + bin + '/latest', {
+      headers: { 'X-Master-Key': key, 'X-Bin-Meta': 'false' },
+    });
+    if (!r.ok) throw new Error('read ' + r.status);
+    const data = await r.json();
+    return Array.isArray(data) ? data : [];
+  };
+
+  const write = async (data) => {
+    const r = await fetch(JSONBIN + bin, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': key,
+        'X-Bin-Versioning': 'false',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!r.ok) throw new Error('write ' + r.status);
+  };
+
+  try {
+    switch (event.httpMethod) {
+      case 'GET':
+        return json(200, await read());
+
+      case 'POST': {
+        const raw = event.isBase64Encoded
+          ? Buffer.from(event.body || '', 'base64').toString('utf8')
+          : event.body || '';
+        if (Buffer.byteLength(raw) > MAX_RESPONSE_BYTES) return json(413, { error: 'Response too large.' });
+        let resp;
+        try { resp = JSON.parse(raw); } catch { return json(400, { error: 'Invalid JSON.' }); }
+        if (!resp || typeof resp !== 'object' || Array.isArray(resp)) {
+          return json(400, { error: 'Expected a single response object.' });
+        }
+        const all = await read();
+        all.push(resp);
+        await write(all);
+        return json(200, { count: all.length });
+      }
+
+      case 'DELETE':
+        await write([]);
+        return json(200, { count: 0 });
+
+      default:
+        return { statusCode: 405, headers: { Allow: 'GET, POST, DELETE' }, body: '' };
+    }
+  } catch (e) {
+    console.error('JSONbin proxy error:', e.message);
+    return json(502, { error: 'Storage request failed.' });
+  }
+};

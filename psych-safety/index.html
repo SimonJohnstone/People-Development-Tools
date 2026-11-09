@@ -294,42 +294,34 @@ let surveySubmitted = false;
 let allResponses = []; // loaded from storage
 let confirmingClear = false;
 
-// ─── JSONBIN CONFIG ─────────────────────────────────────────────────────
-// Fill in your credentials here before deploying to Netlify.
-// Users will never see these — they go straight to the survey.
-const HARDCODED_API_KEY = ''; // REDACTED in repo copy: set your JSONbin Master Key before deploying
-const HARDCODED_BIN_ID  = ''; // REDACTED in repo copy: set your JSONbin Bin ID before deploying
+// ─── SHARED STORAGE ─────────────────────────────────────────────────────
+// Responses are stored in JSONbin via a Netlify Function
+// (netlify/functions/responses.js). The JSONbin key is held in Netlify
+// environment variables and never reaches the browser.
+const API_URL = '/.netlify/functions/responses';
 
-function getCfg() {
-  return { apiKey: HARDCODED_API_KEY, binId: HARDCODED_BIN_ID };
-}
-function isConfigured() {
-  return !!(HARDCODED_API_KEY && HARDCODED_BIN_ID);
-}
+function getCfg() { return { apiKey: '', binId: '' }; } // used only by the legacy setup screen
+function isConfigured() { return true; }
 
-// JSONbin endpoints
-function binUrl(binId) { return `https://api.jsonbin.io/v3/b/${binId}`; }
-
-async function jbRead(cfg) {
-  const r = await fetch(binUrl(cfg.binId), {
-    headers: { 'X-Master-Key': cfg.apiKey }
-  });
-  if (!r.ok) throw new Error('JSONbin read failed: ' + r.status);
+async function apiRead() {
+  const r = await fetch(API_URL, { cache: 'no-store' });
+  if (!r.ok) throw new Error('Load failed: ' + r.status);
   const d = await r.json();
-  return Array.isArray(d.record) ? d.record : [];
+  return Array.isArray(d) ? d : [];
 }
 
-async function jbWrite(cfg, data) {
-  const r = await fetch(binUrl(cfg.binId), {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': cfg.apiKey,
-      'X-Bin-Versioning': 'false'  // overwrite, don't version
-    },
-    body: JSON.stringify(data)
+async function apiAppend(resp) {
+  const r = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(resp)
   });
-  if (!r.ok) throw new Error('JSONbin write failed: ' + r.status);
+  if (!r.ok) throw new Error('Save failed: ' + r.status);
+}
+
+async function apiClear() {
+  const r = await fetch(API_URL, { method: 'DELETE' });
+  if (!r.ok) throw new Error('Clear failed: ' + r.status);
 }
 
 // ─── STORAGE ────────────────────────────────────────────────────────────
@@ -338,7 +330,7 @@ const LS_RESPONSES = 'psych_safety_responses'; // local fallback
 async function loadResponses() {
   try {
     if (isConfigured()) {
-      allResponses = await jbRead(getCfg());
+      allResponses = await apiRead();
     } else {
       const raw = localStorage.getItem(LS_RESPONSES);
       allResponses = raw ? JSON.parse(raw) : [];
@@ -356,7 +348,7 @@ async function saveResponse(resp) {
   updateRespCount();
   try {
     if (isConfigured()) {
-      await jbWrite(getCfg(), allResponses);
+      await apiAppend(resp);
     } else {
       localStorage.setItem(LS_RESPONSES, JSON.stringify(allResponses));
     }
@@ -371,7 +363,7 @@ async function clearAllResponses() {
   updateRespCount();
   try {
     if (isConfigured()) {
-      await jbWrite(getCfg(), []);
+      await apiClear();
     } else {
       localStorage.removeItem(LS_RESPONSES);
     }
