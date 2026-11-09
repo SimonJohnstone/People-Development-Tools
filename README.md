@@ -12,7 +12,7 @@ Source for Simon's suite of people and culture tools, each hosted as its own Net
 | Team Psychological Safety Survey | `psych-safety/` | https://simon-psych-safety.netlify.app/ |
 | Team Culture | `team-culture/` | https://simons-team-culture-questionaire.netlify.app/ |
 
-Every file was copied from the live Netlify deploys on 9 Nov 2026. Each one's SHA-1 matches the deployed file exactly, apart from `psych-safety/index.html` (see Notes).
+Every file was copied from the live Netlify deploys on 9 Nov 2026. Each one's SHA-1 matches the deployed file exactly.
 
 ## Not in the repo: `netlify.toml`
 
@@ -26,5 +26,5 @@ The Framework and Cheat Codes sites don't use a `netlify.toml`.
 
 ## Notes
 
-- **`psych-safety/` differs from the live site on purpose.** The live `index.html` has a JSONbin Master Key and Bin ID written into it (`HARDCODED_API_KEY` / `HARDCODED_BIN_ID`). This repo is public, so those two values are blanked in the repo copy, and that file is the only one whose SHA-1 differs from the live deploy. Put them back locally before you deploy, and never commit them. The live site also serves `psych-safety-netlify.zip`, which holds the same `index.html` with the key in it. The zip is deliberately left out of the repo. `psych-safety-survey.html` is the same page with both values left empty.
+- `psych-safety/` stores responses through `netlify/functions/responses.js`, which reads the JSONbin credentials from Netlify environment variables (`JSONBIN_ACCESS_KEY`, `JSONBIN_BIN_ID`). No credentials are in the page or the repo. `psych-safety-survey.html` is an older standalone copy that saves only to the browser.
 - None of the sites deploy automatically from GitHub. Pushing here does not update them.

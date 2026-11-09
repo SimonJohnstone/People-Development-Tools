@@ -10,6 +10,7 @@
 //   GET     → returns the responses array
 //   POST    → appends one response object (JSON body), returns { count }
 //   DELETE  → clears all responses
+//   POST ?verify=1 → reads and writes the data back unchanged (checks read + update access)
 //
 // The browser can no longer write arbitrary data to the bin: only append
 // a single, size-limited response, or clear (which the dashboard already offers).
@@ -60,6 +61,11 @@ exports.handler = async (event) => {
         return json(200, await read());
 
       case 'POST': {
+        if (event.queryStringParameters && event.queryStringParameters.verify) {
+          const all = await read();
+          await write(all);
+          return json(200, { ok: true, count: all.length });
+        }
         const raw = event.isBase64Encoded
           ? Buffer.from(event.body || '', 'base64').toString('utf8')
           : event.body || '';
