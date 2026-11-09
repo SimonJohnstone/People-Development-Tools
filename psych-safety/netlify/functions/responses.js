@@ -5,18 +5,28 @@
 //   JSONBIN_ACCESS_KEY  – JSONbin Access Key, Bins Read + Update only (preferred, secret)
 //   JSONBIN_MASTER_KEY  – JSONbin Master Key (fallback if no Access Key is set, secret)
 //   JSONBIN_BIN_ID      – ID of the bin holding the responses array
+//   ADMIN_PASSWORD      – password required to clear all responses (clearing is
+//                         refused while this is not set)
 //
 // Endpoints (all at /.netlify/functions/responses):
 //   GET     → returns the responses array
 //   POST    → appends one response object (JSON body), returns { count }
-//   DELETE  → clears all responses
+//   DELETE  → clears all responses; needs header X-Admin-Password = ADMIN_PASSWORD
 //   POST ?verify=1 → reads and writes the data back unchanged (checks read + update access)
 //
 // The browser can no longer write arbitrary data to the bin: only append
-// a single, size-limited response, or clear (which the dashboard already offers).
+// a single, size-limited response, or clear with the admin password.
+
+const crypto = require('crypto');
 
 const JSONBIN = 'https://api.jsonbin.io/v3/b/';
 const MAX_RESPONSE_BYTES = 20 * 1024;
+
+// Constant-time comparison of two strings (hashing first equalises length).
+const sameSecret = (a, b) => crypto.timingSafeEqual(
+  crypto.createHash('sha256').update(String(a)).digest(),
+  crypto.createHash('sha256').update(String(b)).digest(),
+);
 
 const json = (statusCode, body) => ({
   statusCode,
@@ -81,9 +91,14 @@ exports.handler = async (event) => {
         return json(200, { count: all.length });
       }
 
-      case 'DELETE':
+      case 'DELETE': {
+        const admin = process.env.ADMIN_PASSWORD;
+        if (!admin) return json(403, { error: 'Clearing is turned off until an admin password is set.' });
+        const given = (event.headers || {})['x-admin-password'] || '';
+        if (!given || !sameSecret(given, admin)) return json(401, { error: 'Incorrect password.' });
         await write([]);
         return json(200, { count: 0 });
+      }
 
       default:
         return { statusCode: 405, headers: { Allow: 'GET, POST, DELETE' }, body: '' };
