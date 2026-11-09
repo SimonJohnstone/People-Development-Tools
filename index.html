@@ -109,6 +109,16 @@
 
     .btn-reset:hover { background: var(--card); color: var(--text); }
 
+    .nav-link {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 9px 6px;
+    }
+
+    .nav-link:hover { color: var(--text); }
+
     .page-content {
       padding: 28px 24px;
     }
@@ -302,6 +312,7 @@
       <p>Rate each competency — High, Medium, or Low</p>
     </div>
     <div class="topbar-controls">
+      <a class="nav-link" href="cheat-codes.html">Cheat Codes →</a>
       <input class="name-input" id="nameInput" type="text" placeholder="Enter your name" />
       <button class="btn-export" id="exportBtn">Export PDF</button>
       <button class="btn-reset" id="resetBtn">Reset</button>
