@@ -24,5 +24,5 @@ You can deploy a whole folder from here as the site. The Framework and Cheat Cod
 
 ## Notes
 
-- `psych-safety/` stores responses through `netlify/functions/responses.js`, which reads the JSONbin credentials from Netlify environment variables (`JSONBIN_ACCESS_KEY`, `JSONBIN_BIN_ID`). No credentials are in the page or the repo. `psych-safety-survey.html` is an older standalone copy that saves only to the browser. `psych-safety-survey-team.html` is an unpublished "team edition" of the survey, recovered from an old branch. It isn't deployed to any site.
+- `psych-safety/` stores responses through `netlify/functions/responses.js`, which reads the JSONbin credentials from Netlify environment variables (`JSONBIN_ACCESS_KEY`, `JSONBIN_BIN_ID`). No credentials are in the page or the repo. The dashboard's **Clear all responses** button needs the admin password stored in the `ADMIN_PASSWORD` environment variable; clearing is refused while that variable isn't set. `psych-safety-survey.html` is an older standalone copy that saves only to the browser. `psych-safety-survey-team.html` is an unpublished "team edition" of the survey, recovered from an old branch. It isn't deployed to any site.
 - None of the sites deploy automatically from GitHub. Pushing here does not update them.
