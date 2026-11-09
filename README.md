@@ -12,17 +12,15 @@ Source for Simon's suite of people and culture tools, each hosted as its own Net
 | Team Psychological Safety Survey | `psych-safety/` | https://simon-psych-safety.netlify.app/ |
 | Team Culture | `team-culture/` | https://simons-team-culture-questionaire.netlify.app/ |
 
-Every file was copied from the live Netlify deploys on 9 Nov 2026. Each one's SHA-1 matches the deployed file exactly.
+Every file was copied from the live Netlify deploys on 9 Nov 2026. Each one's SHA-1 matches the deployed file exactly, except the `netlify.toml` files described below.
 
-## Not in the repo: `netlify.toml`
+## `netlify.toml`
 
-The Toolkit, Values, Motivators, Team Culture and Psych Safety sites each have a `netlify.toml` on Netlify. Netlify doesn't serve that file publicly, and its API won't return the contents, so none of them are here.
+The Toolkit, Values, Motivators, Team Culture and Psych Safety folders each have the `netlify.toml` from their live deploy. Netlify generated them on drag-and-drop deploys, and they set no redirects, headers, plugins or build settings.
 
-To add one, open Netlify, go to **site → Deploys**, open the latest deploy, choose **Download**, then copy `netlify.toml` into that site's folder.
+Four of the live copies also had a `publish = "..."` line pointing at a local Google Drive folder, plus `publishOrigin = "default"`. Those two lines were removed before committing because the folder path includes a personal email address and this repo is public. Netlify doesn't use them when files are uploaded directly, so the sites behave the same.
 
-**Until a site's `netlify.toml` is in the repo, don't deploy that whole folder as the site.** A full deploy from here would delete the live `netlify.toml`. Upload only the changed files instead.
-
-The Framework and Cheat Codes sites don't use a `netlify.toml`.
+You can deploy a whole folder from here as the site. The Framework and Cheat Codes sites don't use a `netlify.toml`.
 
 ## Notes
 
