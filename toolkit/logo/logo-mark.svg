@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Development Toolkit logo">
+  <rect x="2" y="2" width="116" height="116" rx="28" fill="#231e2a" stroke="#e85d5d" stroke-opacity="0.35" stroke-width="2"/>
+  <!-- ground -->
+  <path d="M34 98 Q60 90 86 98" fill="none" stroke="#a89aab" stroke-width="4" stroke-linecap="round"/>
+  <!-- stem / body -->
+  <path d="M60 94 V50" fill="none" stroke="#e85d5d" stroke-width="6" stroke-linecap="round"/>
+  <!-- leaves / arms -->
+  <path d="M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z" fill="#e85d5d"/>
+  <path d="M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z" fill="#f4a3a3"/>
+  <!-- head -->
+  <circle cx="60" cy="31" r="10" fill="#f0e6e6"/>
+</svg>

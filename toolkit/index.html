@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>People & Culture Tools</title>
+<meta name="description" content="A suite of interactive tools for personal values, motivators, development frameworks, and team culture.">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' role='img' aria-label='Development Toolkit logo'%3E%3Crect x='2' y='2' width='116' height='116' rx='28' fill='%23161b22' stroke='%2322c55e' stroke-opacity='0.35' stroke-width='2'/%3E%3Cpath d='M34 98 Q60 90 86 98' fill='none' stroke='%237d8590' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M60 94 V50' fill='none' stroke='%2322c55e' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z' fill='%2322c55e'/%3E%3Cpath d='M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z' fill='%2386efac'/%3E%3Ccircle cx='60' cy='31' r='10' fill='%23e6edf3'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --col-bg: #161b22;
+    --col-header: #1c2330;
+    --card-bg: #1c2330;
+    --card-hover: #222c3c;
+    --accent: #22c55e;
+    --accent-soft: rgba(34, 197, 94, 0.10);
+    --accent-glow: rgba(34, 197, 94, 0.22);
+    --text: #e6edf3;
+    --text-muted: #7d8590;
+    --text-desc: #9aacb8;
+    --border: rgba(34, 197, 94, 0.14);
+    --border-hover: rgba(34, 197, 94, 0.40);
+    --shadow: 0 2px 8px rgba(0,0,0,0.4);
+    --shadow-lg: 0 16px 48px rgba(0,0,0,0.6);
+    --radius: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .header {
+    padding: 32px 48px 28px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(34,197,94,0.07) 0%, transparent 100%);
+    text-align: center;
+  }
+
+  .header-logo {
+    display: block;
+    width: 56px;
+    height: 59px;
+    margin: 0 auto 14px;
+  }
+
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+
+  .header h1 span {
+    color: var(--accent);
+  }
+
+  .header .subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  /* ── Main grid ── */
+  .main {
+    flex: 1;
+    padding: 52px 48px 64px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  /* ── Tool card ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: border-color 0.25s, background 0.25s, transform 0.2s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top left, var(--accent-soft) 0%, transparent 65%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .card:hover {
+    border-color: var(--border-hover);
+    background: var(--card-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .card-icon {
+    width: 52px;
+    height: 52px;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    transition: background 0.25s, border-color 0.25s;
+  }
+
+  .card:hover .card-icon {
+    background: rgba(34, 197, 94, 0.18);
+    border-color: rgba(34, 197, 94, 0.45);
+  }
+
+  .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.75;
+  }
+
+  .card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text-desc);
+    line-height: 1.65;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .card-cta {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+  }
+
+  .card:hover .card-cta {
+    gap: 10px;
+  }
+
+  .card-cta svg {
+    transition: transform 0.2s;
+  }
+
+  .card:hover .card-cta svg {
+    transform: translateX(3px);
+  }
+
+  .card-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--col-header);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+  }
+
+  /* ── Section divider ── */
+  .divider {
+    grid-column: 1 / -1;
+    border: 0;
+    height: 2px;
+    background: #ffffff;
+    margin: 8px 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 720px) {
+    .header { padding: 28px 24px 22px; }
+    .main { padding: 36px 20px 48px; }
+    .grid { grid-template-columns: 1fr; }
+    .footer { padding: 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <svg class="header-logo" viewBox="20 20 80 84" aria-hidden="true">
+    <path d="M34 98 Q60 90 86 98" fill="none" stroke="#7d8590" stroke-width="4" stroke-linecap="round"/>
+    <path d="M60 94 V50" fill="none" stroke="#22c55e" stroke-width="6" stroke-linecap="round"/>
+    <path d="M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z" fill="#22c55e"/>
+    <path d="M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z" fill="#86efac"/>
+    <circle cx="60" cy="31" r="10" fill="#e6edf3"/>
+  </svg>
+  <div class="header-eyebrow">People &amp; Culture</div>
+  <h1>Your <span>Development</span> Toolkit</h1>
+  <p class="subtitle">Interactive tools to explore what drives you, how you grow, and how your team thrives.</p>
+</header>
+
+<main class="main">
+  <div class="grid">
+
+    <!-- Values -->
+    <a class="card" href="https://simons-values-questionaire.netlify.app/" target="_blank" rel="noopener">
+      <div class="card-icon">💎</div>
+      <div class="card-body">
+        <div class="card-tag">Exercise</div>
+        <h2>Personal Values</h2>
+        <p>Identify and rank what matters most to you. A guided exercise to surface your core values and understand what shapes your decisions.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">
+          Open tool
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </span>
+        <span class="card-badge">Self</span>
+      </div>
+    </a>
+
+    <!-- Motivators -->
+    <a class="card" href="https://simons-motivators-questionaire.netlify.app/" target="_blank" rel="noopener">
+      <div class="card-icon">⚡</div>
+      <div class="card-body">
+        <div class="card-tag">Exercise</div>
+        <h2>Personal Motivators</h2>
+        <p>Discover what energises you at work. Rank 20 motivators to find your top 5 — a great conversation starter for career discussions.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">
+          Open tool
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </span>
+        <span class="card-badge">Self</span>
+      </div>
+    </a>
+
+    <hr class="divider">
+
+    <!-- People Development -->
+    <a class="card" href="https://simons-people-development-framework.netlify.app/" target="_blank" rel="noopener">
+      <div class="card-icon">🌱</div>
+      <div class="card-body">
+        <div class="card-tag">Framework</div>
+        <h2>Personal Development Framework</h2>
+        <p>A structured approach to your own growth. Map your development areas, set intentions, and track your progress over time.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">
+          Open tool
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </span>
+        <span class="card-badge">Self</span>
+      </div>
+    </a>
+
+    <!-- Life Cheat Codes -->
+    <a class="card" href="https://simons-life-cheat-codes.netlify.app/" target="_blank" rel="noopener">
+      <div class="card-icon">🎮</div>
+      <div class="card-body">
+        <div class="card-tag">Checklist</div>
+        <h2>30 Life Cheat Codes</h2>
+        <p>Daniel Pink’s 30 cheat codes for decisions, people, productivity, work and life. Tick the ones you’re already using and see your score for each area.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">
+          Open tool
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </span>
+        <span class="card-badge">Self</span>
+      </div>
+    </a>
+
+    <hr class="divider">
+
+    <!-- Psych Safety -->
+    <a class="card" href="https://simon-psych-safety.netlify.app/" target="_blank" rel="noopener">
+      <div class="card-icon">🛡️</div>
+      <div class="card-body">
+        <div class="card-tag">Survey</div>
+        <h2>Team Psychological Safety Survey</h2>
+        <p>Measure how safe your team feels to speak up, take risks, and be themselves. A survey to identify where trust and openness can grow.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">
+          Open tool
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </span>
+        <span class="card-badge">Team</span>
+      </div>
+    </a>
+
+    <!-- Team Culture -->
+    <a class="card" href="https://simons-team-culture-questionaire.netlify.app/" target="_blank" rel="noopener">
+      <div class="card-icon">🤝</div>
+      <div class="card-body">
+        <div class="card-tag">Exercise</div>
+        <h2>Team Culture</h2>
+        <p>Define the culture your team aspires to. A questionnaire to align on shared norms, behaviours, and what it means to work well together.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">
+          Open tool
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </span>
+        <span class="card-badge">Team</span>
+      </div>
+    </a>
+
+  </div>
+</main>
+
+<footer class="footer">
+  People &amp; Culture Tools &mdash; Simon Johnstone
+</footer>
+
+</body>
+</html>
