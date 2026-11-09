@@ -28,7 +28,19 @@
   body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
   /* ── NAV ── */
-  .top-nav { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 16px 0; }
+  .top-nav { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 16px 0; }
+  /* Toolkit logo: links back to the Development Toolkit (matches the other toolkit sites) */
+  .tk-home {
+    position: absolute; left: 24px; top: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: #181a27; border: 1px solid rgba(139, 124, 246, 0.25);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .tk-home svg { width: 25px; height: 26px; display: block; }
+  .tk-home:hover { border-color: rgba(139, 124, 246, 0.6); background: #0b0c13; }
+  .tk-home:focus-visible { outline: 2px solid #8b7cf6; outline-offset: 2px; }
+
   .nav-tabs { display: flex; gap: 4px; }
   .nav-tab { padding: 12px 22px; border-radius: 10px; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer; border: 1px solid transparent; background: transparent; color: var(--muted); transition: all 0.15s; }
   .nav-tab:hover { color: var(--ink); }
@@ -215,6 +227,7 @@
 
   @media (max-width: 640px) {
     .nav-tab { padding: 10px 14px; font-size: 15px; }
+    .tk-home { position: static; }
     .header { padding-top: 28px; }
     .header p { font-size: 15px; }
     .stage-tabs { grid-template-columns: repeat(2, 1fr); row-gap: 12px; }
@@ -236,6 +249,7 @@
 <body>
 
 <div class="top-nav">
+  <a class="tk-home" href="https://simon-development-toolkit.netlify.app/" title="Back to the Development Toolkit" aria-label="Back to the Development Toolkit home page"><svg viewBox="20 20 80 84" aria-hidden="true"><path d="M34 98 Q60 90 86 98" fill="none" stroke="#8a8fa8" stroke-width="4" stroke-linecap="round"/><path d="M60 94 V50" fill="none" stroke="#8b7cf6" stroke-width="6" stroke-linecap="round"/><path d="M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z" fill="#8b7cf6"/><path d="M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z" fill="#c4bbfc"/><circle cx="60" cy="31" r="10" fill="#f1f2f7"/></svg></a>
   <div class="nav-tabs">
     <button class="nav-tab active" id="tab-survey" onclick="switchTab('survey')">Take Survey</button>
     <button class="nav-tab" id="tab-dashboard" onclick="switchTab('dashboard')">Team Dashboard</button>

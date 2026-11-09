@@ -25,7 +25,19 @@
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
 
 /* NAV */
-.nav{display:flex;justify-content:center;gap:4px;padding:16px 16px 0;position:sticky;top:0;z-index:10;background:var(--bg)}
+.nav{display:flex;justify-content:center;align-items:flex-end;gap:4px;padding:16px 16px 0;position:sticky;top:0;z-index:10;background:var(--bg)}
+  /* Toolkit logo: links back to the Development Toolkit (matches the other toolkit sites) */
+  .tk-home {
+    position: absolute; left: 24px; top: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: #181a27; border: 1px solid rgba(139, 124, 246, 0.25);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .tk-home svg { width: 25px; height: 26px; display: block; }
+  .tk-home:hover { border-color: rgba(139, 124, 246, 0.6); background: #0b0c13; }
+  .tk-home:focus-visible { outline: 2px solid #8b7cf6; outline-offset: 2px; }
+
 .nav-btn{padding:10px 20px;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:10px 10px 0 0;transition:all .2s;white-space:nowrap}
 .nav-btn.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
 .nav-btn:not(.active):hover{color:var(--ink)}
@@ -175,12 +187,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   .stat-cards{grid-template-columns:1fr}
   .dim-name{font-size:13px}
   .nav-btn{padding:9px 12px;font-size:12px}
+  .tk-home{position:static;margin-right:auto;align-self:center;width:36px;height:36px}
+  .tk-home svg{width:22px;height:23px}
 }
 </style>
 </head>
 <body>
 
 <div class="nav">
+  <a class="tk-home" href="https://simon-development-toolkit.netlify.app/" title="Back to the Development Toolkit" aria-label="Back to the Development Toolkit home page"><svg viewBox="20 20 80 84" aria-hidden="true"><path d="M34 98 Q60 90 86 98" fill="none" stroke="#8a8fa8" stroke-width="4" stroke-linecap="round"/><path d="M60 94 V50" fill="none" stroke="#8b7cf6" stroke-width="6" stroke-linecap="round"/><path d="M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z" fill="#8b7cf6"/><path d="M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z" fill="#c4bbfc"/><circle cx="60" cy="31" r="10" fill="#f1f2f7"/></svg></a>
   <button class="nav-btn active" onclick="showView('survey')" id="nav-survey">Take Survey</button>
   <button class="nav-btn" onclick="showView('results')" id="nav-results">Results</button>
   <button class="nav-btn" onclick="showView('create')" id="nav-create">+ New Survey</button>
