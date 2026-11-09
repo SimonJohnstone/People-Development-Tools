@@ -22,6 +22,15 @@ const crypto = require('crypto');
 const JSONBIN = 'https://api.jsonbin.io/v3/b/';
 const MAX_RESPONSE_BYTES = 20 * 1024;
 
+// JSONbin rejects an empty bin, so "clear" stores a single marker record
+// instead of []. Reads hide it, and the next submission replaces it.
+const CLEARED_KEY = '_cleared';
+const isMarker = (rec) => rec && typeof rec === 'object' && CLEARED_KEY in rec;
+
+class StorageError extends Error {
+  constructor(op, status) { super(`${op} ${status}`); this.status = status; }
+}
+
 // Constant-time comparison of two strings (hashing first equalises length).
 const sameSecret = (a, b) => crypto.timingSafeEqual(
   crypto.createHash('sha256').update(String(a)).digest(),
@@ -45,11 +54,11 @@ exports.handler = async (event) => {
     const r = await fetch(JSONBIN + bin + '/latest', {
       headers: { ...auth, 'X-Bin-Meta': 'false' },
     });
-    if (!r.ok) throw new Error('read ' + r.status);
+    if (!r.ok) throw new StorageError('read', r.status);
     const data = await r.json();
     // Accept the raw record, or the { record, metadata } wrapper.
     const record = Array.isArray(data) ? data : data && data.record;
-    return Array.isArray(record) ? record : [];
+    return Array.isArray(record) ? record.filter((rec) => !isMarker(rec)) : [];
   };
 
   const write = async (data) => {
@@ -62,7 +71,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify(data),
     });
-    if (!r.ok) throw new Error('write ' + r.status);
+    if (!r.ok) throw new StorageError('write', r.status);
   };
 
   try {
@@ -73,7 +82,7 @@ exports.handler = async (event) => {
       case 'POST': {
         if (event.queryStringParameters && event.queryStringParameters.verify) {
           const all = await read();
-          await write(all);
+          await write(all.length ? all : [{ [CLEARED_KEY]: new Date().toISOString() }]);
           return json(200, { ok: true, count: all.length });
         }
         const raw = event.isBase64Encoded
@@ -96,7 +105,7 @@ exports.handler = async (event) => {
         if (!admin) return json(403, { error: 'Clearing is turned off until an admin password is set.' });
         const given = (event.headers || {})['x-admin-password'] || '';
         if (!given || !sameSecret(given, admin)) return json(401, { error: 'Incorrect password.' });
-        await write([]);
+        await write([{ [CLEARED_KEY]: new Date().toISOString() }]);
         return json(200, { count: 0 });
       }
 
@@ -105,6 +114,7 @@ exports.handler = async (event) => {
     }
   } catch (e) {
     console.error('JSONbin proxy error:', e.message);
-    return json(502, { error: 'Storage request failed.' });
+    const code = e.status ? ` (JSONbin ${e.status})` : '';
+    return json(502, { error: `Storage request failed${code}.` });
   }
 };
