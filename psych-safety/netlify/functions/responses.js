@@ -2,7 +2,8 @@
 //
 // The JSONbin credentials live in Netlify environment variables, so they
 // never reach the browser:
-//   JSONBIN_MASTER_KEY  – JSONbin X-Master-Key (secret)
+//   JSONBIN_ACCESS_KEY  – JSONbin Access Key, Bins Read + Update only (preferred, secret)
+//   JSONBIN_MASTER_KEY  – JSONbin Master Key (fallback if no Access Key is set, secret)
 //   JSONBIN_BIN_ID      – ID of the bin holding the responses array
 //
 // Endpoints (all at /.netlify/functions/responses):
@@ -23,17 +24,21 @@ const json = (statusCode, body) => ({
 });
 
 exports.handler = async (event) => {
-  const key = process.env.JSONBIN_MASTER_KEY;
+  const accessKey = process.env.JSONBIN_ACCESS_KEY;
+  const masterKey = process.env.JSONBIN_MASTER_KEY;
   const bin = process.env.JSONBIN_BIN_ID;
-  if (!key || !bin) return json(503, { error: 'Shared storage is not configured.' });
+  if (!(accessKey || masterKey) || !bin) return json(503, { error: 'Shared storage is not configured.' });
+  const auth = accessKey ? { 'X-Access-Key': accessKey } : { 'X-Master-Key': masterKey };
 
   const read = async () => {
     const r = await fetch(JSONBIN + bin + '/latest', {
-      headers: { 'X-Master-Key': key, 'X-Bin-Meta': 'false' },
+      headers: { ...auth, 'X-Bin-Meta': 'false' },
     });
     if (!r.ok) throw new Error('read ' + r.status);
     const data = await r.json();
-    return Array.isArray(data) ? data : [];
+    // Accept the raw record, or the { record, metadata } wrapper.
+    const record = Array.isArray(data) ? data : data && data.record;
+    return Array.isArray(record) ? record : [];
   };
 
   const write = async (data) => {
@@ -41,7 +46,7 @@ exports.handler = async (event) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'X-Master-Key': key,
+        ...auth,
         'X-Bin-Versioning': 'false',
       },
       body: JSON.stringify(data),
