@@ -184,6 +184,22 @@
       white-space: nowrap;
     }
 
+    .count.zero { color: var(--text-muted); }
+
+    .score-bar { height: 3px; background: var(--border); }
+    .score-bar span { display: block; height: 100%; width: 0; background: var(--done-color); transition: width 0.2s; }
+
+    .level-scores { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 16px 0; }
+    .level-scores span {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 9px;
+    }
+    .level-scores b { color: var(--done-color); }
+
     .bonus-intro { padding: 12px 16px 0; font-size: 12.5px; line-height: 1.5; color: var(--text-muted); }
 
     .doing-list { list-style: none; display: flex; flex-direction: column; gap: 6px; padding: 12px; flex: 1; }
@@ -269,7 +285,10 @@
       /* Selected cards are already highlighted, so print the panel as a compact summary */
       .doing-list { display: none; }
       .bonus { justify-content: space-between; }
-      .bonus .count { font-size: 18px; }
+      .bonus .level-header .count { font-size: 18px; }
+      .level-score { font-size: 9px; }
+      .level-scores { padding: 6px 9px 0; gap: 4px; }
+      .level-scores span { font-size: 9px; padding: 2px 7px; }
       .quote { padding: 0 9px 6px; font-size: 9px; }
       .credit { margin-top: 6px; font-size: 8px; }
     }
@@ -366,13 +385,17 @@
         <div class="level-header">
           <span class="level-tag">LEVEL<b>${i + 1}</b></span>
           <h2>${lvl.name}</h2>
+          <span class="count level-score">0 / ${lvl.codes.length}</span>
         </div>
+        <div class="score-bar"><span></span></div>
         <div class="codes"></div>`;
+      lvl.scoreEl = section.querySelector('.level-score');
+      lvl.barEl = section.querySelector('.score-bar span');
       const list = section.querySelector('.codes');
 
       lvl.codes.forEach(text => {
         num++;
-        const code = { num, text, selected: false };
+        const code = { num, text, level: lvl, selected: false };
         const row = document.createElement('button');
         row.type = 'button';
         row.className = 'code';
@@ -401,6 +424,7 @@
         <h2>Doing It Now</h2>
         <span class="count" id="count">0 / 30</span>
       </div>
+      <div class="level-scores" id="levelScores"></div>
       <p class="bonus-intro">Cheat codes only work if you enter them. Select every code you're using right now.</p>
       <ul class="doing-list" id="doingList"></ul>
       <p class="quote">“Life has cheat codes too. It’s just that nobody ever hands you the list.” — Daniel Pink</p>`;
@@ -417,6 +441,20 @@
       });
 
       document.getElementById('count').textContent = `${selected.length} / ${allCodes.length}`;
+
+      // Per-section scores
+      const breakdown = document.getElementById('levelScores');
+      breakdown.innerHTML = '';
+      levels.forEach(lvl => {
+        const n = selected.filter(c => c.level === lvl).length;
+        const total = lvl.codes.length;
+        lvl.scoreEl.textContent = `${n} / ${total}`;
+        lvl.scoreEl.classList.toggle('zero', n === 0);
+        lvl.barEl.style.width = `${(n / total) * 100}%`;
+        const chip = document.createElement('span');
+        chip.innerHTML = `${lvl.name} <b>${n}/${total}</b>`;
+        breakdown.appendChild(chip);
+      });
 
       if (!selected.length) {
         const li = document.createElement('li');
