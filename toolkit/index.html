@@ -228,6 +228,37 @@
     padding: 3px 10px;
   }
 
+  /* ── Light cards: match the light theme of the team survey tools ── */
+  .card--light {
+    --l-bg: #f4f1ec;
+    --l-bg-hover: #faf8f5;
+    --l-ink: #1c1917;
+    --l-text: #57534e;
+    --l-muted: #78716c;
+    --l-border: #e2ddd6;
+    --l-accent: #166534;
+    --l-accent-soft: #dcfce7;
+    background: var(--l-bg);
+    border-color: var(--l-border);
+    color: var(--l-ink);
+  }
+  .card--light::before {
+    background: radial-gradient(ellipse at top left, rgba(22, 101, 52, 0.07) 0%, transparent 65%);
+  }
+  .card--light:hover {
+    background: var(--l-bg-hover);
+    border-color: rgba(22, 101, 52, 0.45);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  }
+  .card--light .card-icon { background: var(--l-accent-soft); border-color: rgba(22, 101, 52, 0.18); }
+  .card--light:hover .card-icon { background: #bbf7d0; border-color: rgba(22, 101, 52, 0.35); }
+  .card--light .card-tag { color: var(--l-accent); opacity: 1; }
+  .card--light h2 { color: var(--l-ink); }
+  .card--light p { color: var(--l-text); }
+  .card--light .card-footer { border-top-color: var(--l-border); }
+  .card--light .card-cta { color: var(--l-accent); }
+  .card--light .card-badge { color: var(--l-muted); background: #ffffff; border-color: var(--l-border); }
+
   /* ── Section divider ── */
   .divider {
     grid-column: 1 / -1;
@@ -354,7 +385,7 @@
     <hr class="divider">
 
     <!-- Psych Safety -->
-    <a class="card" href="https://simon-psych-safety.netlify.app/" target="_blank" rel="noopener">
+    <a class="card card--light" href="https://simon-psych-safety.netlify.app/" target="_blank" rel="noopener">
       <div class="card-icon">🛡️</div>
       <div class="card-body">
         <div class="card-tag">Survey</div>
@@ -373,7 +404,7 @@
     </a>
 
     <!-- Team Culture -->
-    <a class="card" href="https://simons-team-culture-questionaire.netlify.app/" target="_blank" rel="noopener">
+    <a class="card card--light" href="https://simons-team-culture-questionaire.netlify.app/" target="_blank" rel="noopener">
       <div class="card-icon">🤝</div>
       <div class="card-body">
         <div class="card-tag">Exercise</div>
