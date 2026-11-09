@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>30 Life Cheat Codes</title>
+  <style>
+    :root {
+      --bg:           #1a1520;
+      --surface:      #231d2e;
+      --card:         #2a2438;
+      --accent:       #a78bfa;
+      --accent-strong:#7c4dff;
+      --text:         #e8e0f0;
+      --text-muted:   #8880a0;
+      --border:       #3a3248;
+      --done-color:   #4caf70;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* Top nav bar */
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      background: #120f1a;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 220px; }
+
+    .app-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #15111e;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: border-color 0.2s;
+    }
+    .app-icon:hover { border-color: var(--accent); }
+    .app-icon svg { width: 36px; height: 36px; }
+
+    .topbar-title { min-width: 0; }
+    .topbar-title h1 { font-size: 20px; font-weight: 700; color: var(--accent); }
+    .topbar-title p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .topbar-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
+    .nav-link {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 9px 6px;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    .name-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 14px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      width: 200px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .name-input::placeholder { color: var(--text-muted); font-style: italic; }
+    .name-input:focus { border-color: var(--accent); }
+
+    .btn-export, .btn-reset {
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 9px 18px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-export { background: var(--accent-strong); border: 1px solid var(--accent-strong); color: #fff; }
+    .btn-export:hover { background: #6a3cf0; border-color: #6a3cf0; }
+    .btn-reset { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-weight: 600; }
+    .btn-reset:hover { background: var(--card); color: var(--text); }
+
+    .page-content { padding: 28px 24px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* Level section */
+    .level {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .level-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .level-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+    }
+    .level-tag b { color: var(--accent); font-size: 13px; margin-left: 4px; }
+
+    .level-header h2 {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    .codes { display: flex; flex-direction: column; gap: 6px; padding: 10px; }
+
+    /* Selectable code card */
+    .code {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: var(--text);
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .code:hover { border-color: #5a5068; }
+    .code:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .code-num {
+      font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      width: 22px;
+      flex-shrink: 0;
+    }
+
+    .code-text { flex: 1; font-size: 12.5px; line-height: 1.45; }
+
+    .check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .code.selected { background: rgba(76,175,112,0.30); border-color: var(--done-color); }
+    .code.selected .check { background: var(--done-color); border-color: var(--done-color); color: #fff; }
+
+    /* Bonus level: Doing it now */
+    .bonus { border-color: var(--accent); display: flex; flex-direction: column; }
+    .bonus .level-tag b { font-size: 11px; }
+
+    .count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--done-color);
+      white-space: nowrap;
+    }
+
+    .count.zero { color: var(--text-muted); }
+
+    .score-bar { height: 3px; background: var(--border); }
+    .score-bar span { display: block; height: 100%; width: 0; background: var(--done-color); transition: width 0.2s; }
+
+    .bonus-intro { padding: 12px 16px 0; font-size: 12.5px; line-height: 1.5; color: var(--text-muted); }
+
+    .focus-total { color: var(--accent); }
+
+    .focus-list { list-style: none; display: flex; flex-direction: column; gap: 6px; padding: 12px; flex: 1; }
+
+    .focus-list li {
+      display: grid;
+      grid-template-columns: 120px 1fr 28px 92px;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 12.5px;
+    }
+
+    .focus-name { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .focus-name .lvl { font-family: ui-monospace, Menlo, monospace; color: var(--accent); font-weight: 700; }
+
+    .focus-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .focus-bar span { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.2s; }
+
+    .focus-num { font-size: 18px; font-weight: 700; color: var(--accent); text-align: right; }
+    .focus-unit { font-size: 11px; color: var(--text-muted); }
+
+    .focus-list li.clear { border-color: var(--done-color); }
+    .focus-list li.clear .focus-num { color: var(--done-color); }
+    .focus-list li.clear .focus-unit { color: var(--done-color); }
+
+    @media (max-width: 520px) {
+      .focus-list li { grid-template-columns: 1fr auto auto; }
+      .focus-bar { grid-column: 1 / -1; grid-row: 2; }
+    }
+
+    .quote {
+      padding: 0 16px 14px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .credit {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .topbar, .page-content { padding-left: 16px; padding-right: 16px; }
+      .name-input { width: 100%; }
+      .topbar-controls { width: 100%; }
+    }
+
+    /* ── Print / Export PDF ── */
+    @media print {
+      @page { size: A4 landscape; margin: 8mm; }
+
+      body {
+        background: #1a1520 !important;
+        min-height: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .topbar { display: none; }
+      .page-content { padding: 0; }
+
+      .page-content::before {
+        content: attr(data-name);
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: #a78bfa;
+        margin-bottom: 6px;
+      }
+
+      .layout { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+      .level { border-radius: 6px; break-inside: avoid; }
+      .level-header { padding: 5px 9px; }
+      .level-header h2 { font-size: 9.5px; letter-spacing: 1.2px; }
+      .level-tag { font-size: 7px; }
+      .level-tag b { font-size: 9px; }
+      .codes { gap: 4px; padding: 6px; }
+      .code { padding: 6px 7px; gap: 7px; border-radius: 4px; }
+      .code-num { font-size: 10.5px; width: 17px; }
+      .code-text { font-size: 10px; line-height: 1.35; }
+      .check { width: 13px; height: 13px; font-size: 8px; border-width: 1px; }
+
+      .bonus-intro { padding: 6px 9px 0; font-size: 9.5px; }
+      .focus-list { gap: 4px; padding: 6px; }
+      .focus-list li { grid-template-columns: 78px 1fr 18px 62px; gap: 6px; padding: 4px 7px; border-radius: 4px; font-size: 9.5px; }
+      .focus-num { font-size: 12px; }
+      .focus-unit { font-size: 8px; }
+      .focus-bar { height: 4px; }
+      .level-score { font-size: 9px; }
+
+      .quote { padding: 0 9px 6px; font-size: 9px; }
+      .credit { margin-top: 6px; font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <a class="app-icon" href="https://simon-development-toolkit.netlify.app/" title="Back to Development Toolkit" aria-label="Back to Development Toolkit">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="6" r="3.4" fill="#fff"/>
+          <path d="M16 12v13" stroke="var(--accent-strong)" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M16 19c-5.5 0-9-3.2-9.5-8 5.2-.3 9 2.6 9.5 8z" fill="var(--accent)"/>
+          <path d="M16 19c5.5 0 9-3.2 9.5-8-5.2-.3-9 2.6-9.5 8z" fill="var(--accent)"/>
+          <path d="M7 27.5c3-1.6 6-2.3 9-2.3s6 .7 9 2.3" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </a>
+      <div class="topbar-title">
+        <h1>30 Life Cheat Codes</h1>
+        <p>I wish I knew earlier — select the codes you're doing now</p>
+      </div>
+    </div>
+    <div class="topbar-controls">
+      <a class="nav-link" href="https://simon-development-toolkit.netlify.app/">← Development Toolkit</a>
+      <a class="nav-link" href="https://simons-people-development-framework.netlify.app/">Framework</a>
+      <input class="name-input" id="nameInput" type="text" placeholder="Enter your name" />
+      <button class="btn-export" id="exportBtn">Export PDF</button>
+      <button class="btn-reset" id="resetBtn">Reset</button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="layout" id="layout"></div>
+    <p class="credit">Cheat codes by Daniel Pink · The Pink Report · danpink.com</p>
+  </div>
+
+  <script>
+    const levels = [
+      {
+        name: 'Decisions',
+        codes: [
+          'I decide using an ordinary Tuesday, not a fantasy Saturday.',
+          'For reversible decisions, I decide fast.',
+          'I ask, “What would change my mind?”',
+          'Before deciding what to do, I ask what happens if I do nothing.',
+          'I make lots of small bets.',
+          'I judge decisions by how I made them, not only by how they turned out.'
+        ]
+      },
+      {
+        name: 'People',
+        codes: [
+          'Before solving someone’s problem, I ask what they want: advice, help, or company.',
+          'I assume incompetence before malice.',
+          'I notice who asks me questions.',
+          'I don’t keep score in relationships I want to keep.',
+          'I build an infrastructure for friendship.',
+          'I eliminate toxic people (yes, even relatives).'
+        ]
+      },
+      {
+        name: 'Productivity',
+        codes: [
+          'I define “done” before I begin.',
+          'I make the first step embarrassingly small.',
+          'I let it be easy (I use the rotisserie chicken).',
+          'I prepare tomorrow’s first move tonight.',
+          'I keep a “waiting for” list.',
+          'I treat constant busyness as a warning, not a status symbol.'
+        ]
+      },
+      {
+        name: 'Work',
+        codes: [
+          'I send the recap email.',
+          'I make my boss’s life easier.',
+          'I ask for the deadline, then I ask for the real deadline.',
+          'I lead with a request and bring a recommendation.',
+          'I get good at something valuable that everybody else avoids.',
+          'I’m not the boss I had. I’m the boss I should have had.'
+        ]
+      },
+      {
+        name: 'Life',
+        codes: [
+          'I design my environment around my behavior.',
+          'I spend money eliminating recurring misery before buying occasional pleasure.',
+          'I create traditions on purpose.',
+          'I don’t try to be normal.',
+          'I compete with myself, not with somebody else.',
+          'I avoid unnecessary suffering. I accept necessary suffering.'
+        ]
+      }
+    ];
+
+    const allCodes = [];               // { num, text, el, selected }
+    const layout = document.getElementById('layout');
+    const pad = n => String(n).padStart(2, '0');
+
+    let num = 0;
+    levels.forEach((lvl, i) => {
+      const section = document.createElement('div');
+      section.className = 'level';
+      section.innerHTML = `
+        <div class="level-header">
+          <span class="level-tag">LEVEL<b>${i + 1}</b></span>
+          <h2>${lvl.name}</h2>
+          <span class="count level-score">0 / ${lvl.codes.length}</span>
+        </div>
+        <div class="score-bar"><span></span></div>
+        <div class="codes"></div>`;
+      lvl.scoreEl = section.querySelector('.level-score');
+      lvl.barEl = section.querySelector('.score-bar span');
+      const list = section.querySelector('.codes');
+
+      lvl.codes.forEach(text => {
+        num++;
+        const code = { num, text, level: lvl, selected: false };
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.className = 'code';
+        row.setAttribute('aria-pressed', 'false');
+        row.innerHTML = `<span class="code-num">${pad(num)}</span><span class="code-text"></span><span class="check" aria-hidden="true">✓</span>`;
+        row.querySelector('.code-text').textContent = text;
+        row.addEventListener('click', () => {
+          code.selected = !code.selected;
+          render();
+        });
+
+        code.el = row;
+        allCodes.push(code);
+        list.appendChild(row);
+      });
+
+      layout.appendChild(section);
+    });
+
+    // Summary panel
+    const bonus = document.createElement('div');
+    bonus.className = 'level bonus';
+    bonus.innerHTML = `
+      <div class="level-header">
+        <span class="level-tag">BONUS LEVEL<b>■</b></span>
+        <h2>Focus Areas</h2>
+        <span class="count focus-total" id="count">30 to focus on</span>
+      </div>
+      <p class="bonus-intro">Codes you haven’t selected yet in each section — these are your focus areas.</p>
+      <ul class="focus-list" id="focusList"></ul>
+      <p class="quote">“Life has cheat codes too. It’s just that nobody ever hands you the list.” — Daniel Pink</p>`;
+    layout.appendChild(bonus);
+
+    function render() {
+      const selected = allCodes.filter(c => c.selected);
+      const remaining = allCodes.length - selected.length;
+
+      allCodes.forEach(c => {
+        c.el.classList.toggle('selected', c.selected);
+        c.el.setAttribute('aria-pressed', String(c.selected));
+      });
+
+      document.getElementById('count').textContent =
+        remaining ? `${remaining} to focus on` : 'All 30 in use';
+
+      // Section scores (selected) and focus areas (not selected)
+      const focusList = document.getElementById('focusList');
+      focusList.innerHTML = '';
+      levels.forEach((lvl, i) => {
+        const total = lvl.codes.length;
+        const n = selected.filter(c => c.level === lvl).length;
+        const left = total - n;
+        lvl.scoreEl.textContent = `${n} / ${total}`;
+        lvl.scoreEl.classList.toggle('zero', n === 0);
+        lvl.barEl.style.width = `${(n / total) * 100}%`;
+
+        const li = document.createElement('li');
+        li.className = left ? '' : 'clear';
+        li.innerHTML = `
+          <span class="focus-name"><span class="lvl">${i + 1}</span>${lvl.name}</span>
+          <span class="focus-bar"><span style="width:${(left / total) * 100}%"></span></span>
+          <span class="focus-num">${left}</span>
+          <span class="focus-unit">${left ? 'not selected' : 'all selected ✓'}</span>`;
+        focusList.appendChild(li);
+      });
+    }
+
+    render();
+
+    // Reset
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      allCodes.forEach(c => c.selected = false);
+      document.getElementById('nameInput').value = '';
+      render();
+    });
+
+    // Export PDF
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const name = document.getElementById('nameInput').value.trim();
+      const heading = name ? `${name} — 30 Life Cheat Codes` : '30 Life Cheat Codes';
+      const content = document.querySelector('.page-content');
+      const originalTitle = document.title;
+      content.setAttribute('data-name', heading);
+      document.title = heading;
+      window.print();
+      document.title = originalTitle;
+    });
+  </script>
+
+</body>
+</html>

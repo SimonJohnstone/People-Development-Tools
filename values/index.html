@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Values Board — Personal Values Exercise</title>
+<meta name="description" content="An interactive Kanban-style board to help you discover and prioritise your core personal values.">
+<meta property="og:title" content="My Values Board">
+<meta property="og:description" content="Discover and prioritise your core personal values with this interactive exercise.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#11121b">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #11121b;
+    --col-bg: #181a27;
+    --col-header: #0b0c13;
+    --card-bg: #1a1d2c;
+    --card-hover: #1f2235;
+    --accent: #8b7cf6;
+    --accent-soft: rgba(139, 124, 246, 0.12);
+    --text: #f1f2f7;
+    --text-muted: #8a8fa8;
+    --text-desc: #d7d9e4;
+    --border: #272a3c;
+    --shadow: 0 2px 8px rgba(0,0,0,0.4);
+    --shadow-drag: 0 12px 32px rgba(0,0,0,0.6);
+    --radius: 10px;
+    --tab-h: 64px;
+    --top-h: 56px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: auto;
+  }
+
+  /* ─── Toolkit header (shared by the Values and Motivators boards) ─── */
+  .tk-header {
+    position: sticky;
+    top: 0;
+    z-index: 300;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 24px;
+    padding-top: calc(14px + env(safe-area-inset-top));
+    background-color: var(--bg);
+    background-image: linear-gradient(180deg, rgba(139, 124, 246,0.06) 0%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tk-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+  .tk-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: var(--accent);
+  }
+
+  .tk-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Logo: links back to the toolkit home page */
+  .home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #181a27;
+    border: 1px solid rgba(139, 124, 246, 0.25);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .home-link svg { width: 25px; height: 26px; display: block; }
+  .home-link:hover { border-color: rgba(139, 124, 246, 0.6); background: #1a1d2c; }
+  .home-link:focus-visible { outline: 2px solid #8b7cf6; outline-offset: 2px; }
+
+  /* Email + actions: inline on desktop, a drop-down panel on mobile */
+  .tk-settings { display: flex; align-items: center; gap: 10px; }
+  .tk-label { display: none; }
+
+  .tk-email-field { position: relative; display: inline-flex; }
+
+  .tk-email {
+    width: 220px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .tk-email::placeholder { color: var(--text-muted); font-style: italic; }
+  .tk-email:focus { border-color: var(--accent); }
+  .tk-email.invalid { border-color: #e05555; }
+
+  .tk-email-error {
+    position: absolute;
+    top: 100%;
+    left: 4px;
+    margin-top: 3px;
+    font-size: 11px;
+    color: #e05555;
+    white-space: nowrap;
+    display: none;
+  }
+  .tk-email-field.show-error .tk-email-error { display: block; }
+
+  .tk-actions { display: flex; gap: 8px; }
+
+  .tk-btn {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+  }
+  .tk-btn:active { opacity: 0.75; }
+  .tk-btn-primary { background: rgba(139, 124, 246,0.12); color: var(--accent); }
+  .tk-btn-muted { background: transparent; color: var(--text-muted); }
+
+  @media (hover: hover) {
+    .tk-btn:hover { background: rgba(139, 124, 246,0.2); transform: translateY(-1px); }
+    .tk-btn-muted:hover { color: var(--text); }
+  }
+
+  .tk-settings-toggle {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    background: rgba(139, 124, 246,0.10);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 9px 12px;
+    cursor: pointer;
+  }
+  .tk-settings-toggle[aria-expanded="true"] { background: rgba(139, 124, 246,0.22); }
+
+  @media (max-width: 767px) {
+    .tk-header {
+      flex-wrap: wrap;
+      gap: 0 12px;
+      padding: 10px 16px;
+      padding-top: calc(10px + env(safe-area-inset-top));
+    }
+    .tk-title { font-size: 20px; }
+    .tk-subtitle { display: none; }
+    .home-link { width: 36px; height: 36px; }
+    .home-link svg { width: 22px; height: 23px; }
+
+    .tk-settings-toggle { display: inline-flex; }
+
+    .tk-settings {
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      width: calc(100% + 32px);
+      margin: 10px -16px -10px;
+      padding: 14px 16px;
+      background: var(--col-header);
+      border-top: 1px solid var(--border);
+    }
+    .tk-settings.open { display: flex; }
+
+    .tk-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .tk-email-field { display: flex; flex-direction: column; }
+    .tk-email { width: 100%; padding: 12px 14px; font-size: 16px; border-radius: 10px; }
+    .tk-email-error { position: static; margin-top: 6px; white-space: normal; }
+    .tk-actions { gap: 10px; }
+    .tk-btn { flex: 1; padding: 12px; font-size: 15px; border-radius: 10px; }
+  }
+
+  .board {
+    display: flex;
+    gap: 20px;
+    padding: 24px 36px;
+    min-height: calc(100vh - 90px);
+    overflow-x: auto;
+  }
+
+  .column {
+    min-width: 320px;
+    max-width: 360px;
+    flex-shrink: 0;
+    background: var(--col-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 120px);
+  }
+
+  .column-header {
+    padding: 16px 18px 12px;
+    background: var(--col-header);
+    border-radius: 14px 14px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .column-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+  }
+
+  .card-count {
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 12px;
+  }
+
+  .card-count.over {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .card-list {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-list::-webkit-scrollbar { width: 6px; }
+  .card-list::-webkit-scrollbar-track { background: transparent; }
+  .card-list::-webkit-scrollbar-thumb { background: rgba(139, 124, 246,0.2); border-radius: 3px; }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    /* Stop long-press text selection / callout menus, which cancel the touch drag */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    position: relative;
+  }
+
+  /* Mouse only: on iPhone, hover styles "stick" to the last card tapped */
+  @media (hover: hover) {
+    .card:hover {
+      background: var(--card-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+      border-color: rgba(139, 124, 246,0.3);
+    }
+  }
+
+  .card.dragging {
+    opacity: 0.5;
+    transform: scale(0.96);
+  }
+
+  .card.drag-over-top {
+    border-top: 2px solid var(--accent);
+    margin-top: -1px;
+  }
+
+  .card.drag-over-bottom {
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: -1px;
+  }
+
+  /* Column under the finger during a touch drag */
+  .column.drop-target {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-family: 'Inter', sans-serif;
+    padding-right: 66px; /* room for the − / + buttons */
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text-desc);
+    line-height: 1.45;
+    font-style: italic;
+  }
+
+  /* − / + buttons: move a card down / up one column */
+  .card-moves {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+  }
+
+  .card-move-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation; /* no double-tap zoom on quick taps */
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  @media (hover: hover) {
+    .card-move-btn:hover:not(:disabled) {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+  }
+
+  .card-move-btn:active:not(:disabled) {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .card-move-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+
+  .card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .add-card-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px dashed rgba(139, 124, 246,0.2);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  @media (hover: hover) {
+    .add-card-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+  }
+
+  /* Modal for editing */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--col-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    width: 400px;
+    max-width: 90vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .modal h3 {
+    font-family: 'Inter', sans-serif;
+    color: var(--accent);
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .modal input, .modal textarea {
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .modal input:focus, .modal textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .modal textarea { resize: vertical; min-height: 80px; }
+
+  .modal-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+
+  .modal-btns .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .modal-btns .btn-save {
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    padding: 8px 22px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  @media (hover: hover) {
+    .modal-btns .btn-save:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  }
+
+  .instructions {
+    margin: 0 36px;
+    background: linear-gradient(135deg, rgba(139, 124, 246,0.08) 0%, rgba(139, 124, 246,0.03) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  .instructions-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .instructions-toggle .arrow {
+    transition: transform 0.3s;
+    font-size: 14px;
+  }
+
+  .instructions-toggle .arrow.open { transform: rotate(180deg); }
+
+  .instructions-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .instructions-body.open {
+    max-height: 2000px;
+  }
+
+  .instructions-content {
+    padding: 0 20px 20px;
+  }
+
+  .step {
+    margin-bottom: 18px;
+    padding-left: 0;
+  }
+
+  .step-number {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  .step-prompts {
+    margin-top: 6px;
+    padding-left: 36px;
+  }
+
+  .step-prompts li {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 4px;
+    list-style: disc;
+  }
+
+  .step-tip {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .step-tip kbd {
+    font-family: inherit;
+    font-size: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0 5px;
+  }
+
+  /* Tab bar — hidden on desktop */
+  .tab-bar {
+    display: none;
+  }
+
+  /* Short confirmation after a − / + move */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(139, 124, 246,0.95);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 20px;
+    z-index: 1000;
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  #toast.show { opacity: 1; }
+
+  @media (max-width: 767px) {
+    #toast { bottom: calc(var(--tab-h) + 12px + env(safe-area-inset-bottom)); }
+  }
+
+  /* Touch drag hint overlay */
+  #drag-hint {
+    display: none;
+    position: fixed;
+    bottom: calc(var(--tab-h) + 12px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(139, 124, 246,0.9);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    z-index: 1000;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ─── Mobile ─────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      /* Override the desktop min-height: on iOS Safari 100vh is taller than the visible
+         screen, which pushed the tab bar behind Safari's bottom toolbar */
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .instructions {
+      flex: 0 0 auto;
+      margin: 0;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      margin-top: 0;
+    }
+
+    .board {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: row;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      padding: 0;
+      gap: 0;
+      min-height: unset;
+    }
+
+    .board::-webkit-scrollbar { display: none; }
+
+    .board::after {
+      content: "";
+      flex: 0 0 25vw;
+      display: block;
+      pointer-events: none;
+    }
+
+    .column {
+      flex: 0 0 75vw !important;
+      min-width: unset !important;
+      max-width: unset !important;
+      max-height: unset !important;
+      display: flex !important;
+      flex-direction: column;
+      scroll-snap-align: start;
+      overflow-y: auto;
+      min-height: 0;
+      border-radius: 0;
+      border-top: none;
+      border-bottom: none;
+    }
+
+    .column:first-child { border-left: none; }
+
+
+    .card { touch-action: auto; }
+
+    /* Tab bar */
+    .tab-bar {
+      display: flex;
+      position: sticky;
+      bottom: 0;
+      flex: 0 0 auto;
+      background: var(--col-header);
+      border-top: 1px solid var(--border);
+      z-index: 20;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 8px 2px 6px;
+      cursor: pointer;
+      transition: color 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: var(--tab-h);
+    }
+
+    .tab-btn .tab-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .tab-btn.active { color: var(--accent); }
+
+    .tab-btn .tab-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .tab-btn.active .tab-dot { background: var(--accent); }
+
+    /* Tab drop highlight */
+    .tab-btn.drag-target {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .tab-bar, #drag-hint, #toast { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="tk-header">
+  <div class="tk-brand">
+    <a class="home-link" href="https://simon-development-toolkit.netlify.app/" title="Back to the Development Toolkit" aria-label="Back to the Development Toolkit home page"><svg viewBox="20 20 80 84" aria-hidden="true"><path d="M34 98 Q60 90 86 98" fill="none" stroke="#8a8fa8" stroke-width="4" stroke-linecap="round"/><path d="M60 94 V50" fill="none" stroke="#8b7cf6" stroke-width="6" stroke-linecap="round"/><path d="M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z" fill="#8b7cf6"/><path d="M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z" fill="#c4bbfc"/><circle cx="60" cy="31" r="10" fill="#f1f2f7"/></svg></a>
+    <div>
+      <h1 class="tk-title">My Values</h1>
+      <div class="tk-subtitle">Personal values &amp; strengths — drag to reorder</div>
+    </div>
+  </div>
+  <button type="button" class="tk-settings-toggle" id="settings-toggle" aria-expanded="false" aria-controls="settings-drawer" onclick="toggleSettings()">⚙ Settings</button>
+  <div class="tk-settings" id="settings-drawer">
+    <label class="tk-label" for="user-email">Your email</label>
+    <span class="tk-email-field" id="email-field">
+      <input type="email" id="user-email" class="tk-email" placeholder="Enter your email" maxlength="254"
+             autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false"
+             aria-describedby="email-error">
+      <span class="tk-email-error" id="email-error" role="alert">Please enter a valid email address</span>
+    </span>
+    <div class="tk-actions">
+      <button type="button" class="tk-btn tk-btn-primary" onclick="exportBoard()">Export PDF</button>
+      <button type="button" class="tk-btn tk-btn-muted" onclick="resetBoard()">Reset</button>
+    </div>
+  </div>
+</header>
+
+<div class="instructions">
+  <button class="instructions-toggle" onclick="toggleInstructions()">
+    <span>How to use this board</span>
+    <span class="arrow" id="arrow">▼</span>
+  </button>
+  <div class="instructions-body" id="instructions-body">
+    <div class="instructions-content">
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <span class="step-title">Below are 55 values. For the first part of this exercise, select which values feel important to you. Discard any that aren't important by leaving them in the un-filed pile. Don't worry about limiting the number of values.</span>
+        <ul class="step-prompts">
+          <li>Which ones did you discard? Why?</li>
+          <li>Were there any that you weren't sure of?</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <span class="step-title">Now you need to select your top 20. Drag values from your Important Values pile into the Top 20. If you're struggling with choosing, try to put yourself in a situation where you compromised that value. How did it feel?</span>
+        <ul class="step-prompts">
+          <li>How was that? Did you struggle with any, or did you find it was easy picking out your top 20?</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <span class="step-title">Now it gets even harder. Select your top 10 from your top 20. Can't decide? Ask your teammates if they think you demonstrate that value.</span>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <span class="step-title">Finally, select your top 3 values.</span>
+        <ul class="step-prompts">
+          <li>What made you choose these three?</li>
+          <li>Are there any that almost made the cut?</li>
+          <li>Did you ever compromise any of these values?</li>
+        </ul>
+      </div>
+
+      <p class="step-tip">
+        <strong>Moving cards:</strong> tap <strong>+</strong> on a card to move it up to the next column, or <strong>−</strong> to move it back. You can also drag them with the mouse. On a phone, press and hold a card, then drop it on the next column, or on a tab at the bottom to send it to that column. Drop it on another card to reorder.
+        With a keyboard, press <kbd>Tab</kbd> to reach a card, then <kbd>Alt</kbd> + <kbd>↑</kbd>/<kbd>↓</kbd> to reorder, and <kbd>Alt</kbd> + <kbd>←</kbd>/<kbd>→</kbd> to move between columns.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<div class="board" id="board"></div>
+
+<!-- Bottom tab bar (mobile only) -->
+<div class="tab-bar" id="tab-bar"></div>
+
+<!-- Touch drag hint -->
+<div id="drag-hint">Drop on a column or tab to move, or on a card to reorder</div>
+
+<!-- Confirmation after a − / + move -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Edit Card</h3>
+    <input type="text" id="modal-name" placeholder="Value name">
+    <textarea id="modal-desc" placeholder="Description"></textarea>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  // Default board. When you change the value list or wording, bump DATA_VERSION (see Init)
+  // so returning visitors pick up the changes.
+  const DEFAULT_BOARD = {
+    columns: [
+      {
+        id: 'values',
+        title: 'Values',
+        cards: [
+          { id: 'c1', title: 'Power', desc: 'Having control, being in authority, exerting influence over others' },
+          { id: 'c2', title: 'Legacy', desc: 'You care deeply about future generations and seek to leave a legacy through everything you do.' },
+          { id: 'c3', title: 'Loyalty', desc: 'Sense of duty, respectfulness, obedience.' },
+          { id: 'c4', title: 'Competition', desc: 'Winning, taking risks' },
+          { id: 'c5', title: 'Forgiveness', desc: 'Willing to let go of a negative judgment' },
+          { id: 'c6', title: 'Order', desc: 'Tranquility, stability, conformity' },
+          { id: 'c7', title: 'Security', desc: 'Financial and/or emotional stability' },
+          { id: 'c8', title: 'Peace', desc: 'A world at peace, without war or conflict' },
+          { id: 'c9', title: 'Influence', desc: 'Persuasion, bringing others together around common cause' },
+          { id: 'c10', title: 'Compassion', desc: 'Empathy, tolerance and understanding of others' },
+          { id: 'c11', title: 'Recognition', desc: 'Social status, being respected' },
+          { id: 'c12', title: 'Altruism', desc: 'Helping those who cannot help themselves / giving back' },
+          { id: 'c13', title: 'Personal Development', desc: 'Improving yourself, showing growth' },
+          { id: 'c14', title: 'Commitment', desc: 'Dedication to cause, satisfaction in obligation' },
+          { id: 'c15', title: 'Affection', desc: 'Love and caring' },
+          { id: 'c16', title: 'Spirituality', desc: 'Moral compass, belief in higher purpose, faith' },
+          { id: 'c17', title: 'Spotlight', desc: 'In a meeting or in a social, naturally speak up and hold the floor. You love capturing people\'s interest & attention' },
+          { id: 'c18', title: 'Personalisation', desc: 'What makes you special — how can we make the most of your unique individual strengths' },
+          { id: 'c19', title: 'Unconditionality', desc: 'Capacity to accept and respect people for who they are, without judging.' },
+          { id: 'c20', title: 'Creativity', desc: 'Being imaginative, innovative' },
+          { id: 'c21', title: 'Explainer', desc: 'Take complex ideas & express them simply and clearly. Simplify things, ensuring many people can understand' },
+          { id: 'c22', title: 'Individuality', desc: 'Originality, self-expression' },
+          { id: 'c23', title: 'Adventure', desc: 'New and challenging experiences' },
+          { id: 'c24', title: 'Cooperation', desc: 'Working well with others, teamwork' },
+          { id: 'c25', title: 'Relationship Deepener', desc: 'What can we build together.. I am willing to put in the effort to make something great .. are you?' },
+          { id: 'c26', title: 'Responsibility', desc: 'Being dependable, reliable' },
+          { id: 'c27', title: 'Intellect', desc: 'Conceptual, abstract, or symbolic thinking' },
+          { id: 'c28', title: 'Love', desc: 'Deep affection, intimacy' },
+          { id: 'c29', title: 'Determination', desc: 'Strength and perseverance, whatever it takes' },
+          { id: 'c30', title: 'Family', desc: 'Mutual support and growth' },
+          { id: 'c31', title: 'Teaching', desc: 'Passing knowledge onto others' },
+          { id: 'c32', title: 'Excitement', desc: 'A stimulating or challenging life' },
+          { id: 'c33', title: 'Helpfulness', desc: 'Assisting others, improving society.' },
+          { id: 'c34', title: 'Harmony', desc: 'Oneness, alignment' },
+          { id: 'c35', title: 'Catalyst / Change Agent', desc: 'Let\'s mobilise and inspire other people to get things started — getting new projects off the ground / putting ideas into action by involving others.' },
+          { id: 'c36', title: 'Freedom', desc: 'Independence, autonomy, free choice, self-reliant' },
+          { id: 'c37', title: 'Self Awareness', desc: 'Enjoy spending time & effort on understanding behaviour, emotions, strengths + weakness.' },
+          { id: 'c38', title: 'Accomplishment', desc: 'Succeeding in reaching goals' },
+          { id: 'c39', title: 'Wisdom', desc: 'Application of knowledge and experience' },
+          { id: 'c40', title: 'Ambition', desc: 'Aspiring to promotion or progress within your career' },
+          { id: 'c41', title: 'Humility', desc: 'Give other people credit for successes, rather than taking the credit yourself.' },
+          { id: 'c42', title: 'Competence', desc: 'Do things well, consistent self improvement' },
+          { id: 'c43', title: 'Joy', desc: 'Appreciating the extraordinary in everyday things' },
+          { id: 'c44', title: 'Bounceback', desc: 'Whatever setback or disappointment just makes you more determined to succeed. Enjoy picking myself up' },
+          { id: 'c45', title: 'Fairness - Equality', desc: 'Equal consideration, value of the greater good' },
+          { id: 'c46', title: 'Authenticity', desc: 'Do things with conviction & without pretence. Keep own values & beliefs. Proud to stand up for what you believe in' },
+          { id: 'c47', title: 'Respect', desc: 'Fair treatment, valuing individuals for uniqueness and opinion' },
+          { id: 'c48', title: 'Well Being', desc: 'Being well physically and mentally' },
+          { id: 'c49', title: 'Fun', desc: 'Enjoyment, amusement, light hearted pleasure' },
+          { id: 'c50', title: 'Impact', desc: 'Making a difference, changing the world, creating legacy' },
+          { id: 'c51', title: 'Learning', desc: 'Continuous education & experiences.' },
+          { id: 'c52', title: 'Courage / Accountability', desc: 'Standing up for beliefs / Being accountable' },
+          { id: 'c53', title: 'Integrity', desc: 'Honesty, sincerity, genuineness.' },
+          { id: 'c54', title: 'Balance', desc: 'Calm, moderate, perspective' },
+          { id: 'c55', title: 'Passion', desc: 'Enthusiasm, powerful attraction' },
+        ]
+      },
+      {
+        id: 'important',
+        title: 'Important Values',
+        cards: []
+      },
+      {
+        id: 'top20',
+        title: 'Top 20 Values',
+        cards: []
+      },
+      {
+        id: 'top10',
+        title: 'Top 10 Values',
+        cards: []
+      },
+      {
+        id: 'top',
+        title: 'Top 3 Values',
+        cards: []
+      }
+    ]
+  };
+
+  // Soft limits shown in the column header count
+  const COLUMN_LIMITS = { top20: 20, top10: 10, top: 3 };
+
+  let boardData = null;
+  let draggedCard = null;
+
+  // Only use the browser's built-in drag-and-drop with a real mouse. On phones, a
+  // draggable element starts the browser's own drag on long-press, which cancels
+  // our touch drag.
+  const USE_NATIVE_DRAG = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let modalMode = null;
+  let modalTarget = null;
+  let nextId = 100;
+
+  // ─── Storage (browsers can block or fill localStorage) ────────────────
+  function storageGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  function storageSet(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+
+  function storageRemove(key) {
+    try { localStorage.removeItem(key); } catch (e) {}
+  }
+
+  // ─── Render ──────────────────────────────────────────────────────────
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Short labels for the default columns' tabs; used while the column keeps its default title
+  const TAB_DEFAULTS = {
+    values:    { icon: '💎', title: 'Values',           label: 'Values' },
+    important: { icon: '⭐', title: 'Important Values', label: 'Important' },
+    top20:     { icon: '🔢', title: 'Top 20 Values',    label: 'Top 20' },
+    top10:     { icon: '🎯', title: 'Top 10 Values',    label: 'Top 10' },
+    top:       { icon: '🏆', title: 'Top 3 Values',     label: 'Top 3' },
+  };
+
+  function renderTabs() {
+    const tabBar = document.getElementById('tab-bar');
+    tabBar.innerHTML = boardData.columns.map(col => {
+      const def = TAB_DEFAULTS[col.id];
+      const icon = def ? def.icon : '📌';
+      const label = def && col.title === def.title ? def.label : col.title;
+      return `
+        <button class="tab-btn${col.id === activeTab ? ' active' : ''}" data-tab="${col.id}" onclick="switchTab('${col.id}')">
+          <span class="tab-icon">${icon}</span>
+          <span>${escapeHtml(label)}</span>
+          <span class="tab-dot"></span>
+        </button>`;
+    }).join('');
+  }
+
+  function renderCount(col) {
+    const limit = COLUMN_LIMITS[col.id];
+    if (!limit) return `<span class="card-count">${col.cards.length}</span>`;
+    const over = col.cards.length > limit;
+    return `<span class="card-count${over ? ' over' : ''}" title="${over ? 'More than ' + limit + ' — keep narrowing down' : ''}">${col.cards.length} / ${limit}</span>`;
+  }
+
+  function render() {
+    const board = document.getElementById('board');
+
+    // Remember scroll positions so rebuilding the board doesn't jump columns back to the top
+    const scrollPos = {};
+    board.querySelectorAll('.column').forEach(colEl => {
+      const list = colEl.querySelector('.card-list');
+      scrollPos[colEl.dataset.colId] = { col: colEl.scrollTop, list: list ? list.scrollTop : 0 };
+    });
+
+    // Stop tracking swipes while the board is rebuilt, so the temporary layout can't change the tab
+    if (snapObserver) snapObserver.disconnect();
+    board.innerHTML = '';
+
+    boardData.columns.forEach((col, colIdx) => {
+      const prevCol = boardData.columns[colIdx - 1];
+      const nextCol = boardData.columns[colIdx + 1];
+      const colEl = document.createElement('div');
+      colEl.className = 'column';
+      colEl.dataset.colId = col.id;
+
+      colEl.innerHTML = `
+        <div class="column-header">
+          <h2>${escapeHtml(col.title)}</h2>
+          ${renderCount(col)}
+        </div>
+        <div class="card-list" data-col-id="${col.id}"
+             ondragover="handleDragOver(event)"
+             ondrop="handleDrop(event, '${col.id}')">
+          ${col.cards.map(card => `
+            <div class="card"
+                 tabindex="0"
+                 draggable="${USE_NATIVE_DRAG}"
+                 data-card-id="${card.id}"
+                 data-col-id="${col.id}"
+                 ondragstart="handleDragStart(event, '${card.id}')"
+                 ondragend="handleDragEnd(event)"
+                 ondragover="handleCardDragOver(event)"
+                 ondragleave="handleCardDragLeave(event)">
+              <div class="card-moves">
+                <button class="card-move-btn" onclick="stepCard('${card.id}', -1)"
+                        ${prevCol ? `title="Move back to ${escapeHtml(prevCol.title)}" aria-label="Move ${escapeHtml(card.title)} back to ${escapeHtml(prevCol.title)}"` : 'disabled aria-label="Already in the first column"'}>−</button>
+                <button class="card-move-btn" onclick="stepCard('${card.id}', 1)"
+                        ${nextCol ? `title="Move up to ${escapeHtml(nextCol.title)}" aria-label="Move ${escapeHtml(card.title)} up to ${escapeHtml(nextCol.title)}"` : 'disabled aria-label="Already in the top column"'}>+</button>
+              </div>
+              <div class="card-title">${escapeHtml(card.title)}</div>
+              ${card.desc ? `<div class="card-desc">${escapeHtml(card.desc)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+      board.appendChild(colEl);
+
+      const pos = scrollPos[col.id];
+      if (pos) {
+        colEl.scrollTop = pos.col;
+        colEl.querySelector('.card-list').scrollTop = pos.list;
+      }
+    });
+
+    renderTabs();
+
+    // Touch drag on each card
+    document.querySelectorAll('.card').forEach(card => initTouchDrag(card));
+
+    // Mobile: rebuilding the board resets its sideways scroll, so put the selected tab's
+    // column straight back in view, then resume tracking swipes
+    if (window.innerWidth <= 767) {
+      showColumn(activeTab, false);
+      setupSnapObserver();
+    }
+
+    // Persist
+    storageSet('valuesBoard', JSON.stringify(boardData));
+  }
+
+  // ─── Moving cards (shared by mouse, touch and keyboard) ──────────────
+  function findCard(cardId) {
+    for (const col of boardData.columns) {
+      const idx = col.cards.findIndex(c => c.id === cardId);
+      if (idx !== -1) return { col, idx };
+    }
+    return null;
+  }
+
+  // − / + buttons: move a card one column back (-1) or up (+1), to the end of that column.
+  // The screen stays where it is, as when dropping a card on a column.
+  function stepCard(cardId, direction) {
+    const loc = findCard(cardId);
+    if (!loc) return;
+    const target = boardData.columns[boardData.columns.indexOf(loc.col) + direction];
+    if (!target) return;
+    const title = loc.col.cards[loc.idx].title;
+    if (moveCard(cardId, target.id)) {
+      render();
+      showToast(`${title} → ${target.title}`);
+    }
+  }
+
+  let toastTimer = null;
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  // Moves a card into toColId, before (or after) refCardId, or to the end if no ref is given
+  function moveCard(cardId, toColId, refCardId = null, insertAfter = false) {
+    if (cardId === refCardId) return false;
+    const src = findCard(cardId);
+    const dest = boardData.columns.find(c => c.id === toColId);
+    if (!src || !dest) return false;
+
+    const [card] = src.col.cards.splice(src.idx, 1);
+    const refIdx = refCardId ? dest.cards.findIndex(c => c.id === refCardId) : -1;
+    if (refIdx === -1) {
+      dest.cards.push(card);
+    } else {
+      dest.cards.splice(insertAfter ? refIdx + 1 : refIdx, 0, card);
+    }
+    return true;
+  }
+
+  function isAfterMidpoint(el, clientY) {
+    const rect = el.getBoundingClientRect();
+    return clientY > rect.top + rect.height / 2;
+  }
+
+  // ─── Desktop drag & drop ──────────────────────────────────────────────
+  function handleDragStart(e, cardId) {
+    draggedCard = cardId;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragEnd(e) {
+    e.target.classList.remove('dragging');
+    document.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+    draggedCard = null;
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  }
+
+  function handleCardDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const card = e.target.closest('.card');
+    if (!card || card.dataset.cardId === draggedCard) return;
+    card.classList.remove('drag-over-top', 'drag-over-bottom');
+    card.classList.add(isAfterMidpoint(card, e.clientY) ? 'drag-over-bottom' : 'drag-over-top');
+  }
+
+  function handleCardDragLeave(e) {
+    const card = e.target.closest('.card');
+    if (card) card.classList.remove('drag-over-top', 'drag-over-bottom');
+  }
+
+  function handleDrop(e, targetColId) {
+    e.preventDefault();
+    if (!draggedCard) return;
+
+    const overCard = e.target.closest('.card');
+    // Dropped back onto itself — leave it where it was
+    if (overCard && overCard.dataset.cardId === draggedCard) return;
+
+    const moved = overCard
+      ? moveCard(draggedCard, targetColId, overCard.dataset.cardId, isAfterMidpoint(overCard, e.clientY))
+      : moveCard(draggedCard, targetColId);
+    if (moved) render();
+  }
+
+  // ─── Touch drag ──────────────────────────────────────────────────────
+  const LONG_PRESS_MS = 300;
+  const MOVE_CANCEL_PX = 10;
+  const AUTOSCROLL_EDGE_PX = 50;
+  const AUTOSCROLL_SPEED = 8;
+
+  let td = {
+    active: false, card: null, clone: null, timer: null,
+    startX: 0, startY: 0, offsetX: 0, offsetY: 0,
+    overTab: null, overCard: null, overAfter: false, overCol: null,
+    scrollCol: null, scrollDy: 0
+  };
+
+  function initTouchDrag(card) {
+    card.addEventListener('touchstart', onTouchStart, { passive: true });
+    card.addEventListener('touchmove', onTouchMove, { passive: false });
+    card.addEventListener('touchend', onTouchEnd, { passive: true });
+    card.addEventListener('touchcancel', onTouchCancel);
+    // Android shows a context menu on long-press; suppress it while dragging
+    card.addEventListener('contextmenu', e => { if (td.active) e.preventDefault(); });
+  }
+
+  function onTouchStart(e) {
+    if (e.touches.length !== 1) return;
+    // Let the − / + buttons work as normal taps
+    if (e.target.closest('.card-move-btn')) return;
+    const touch = e.touches[0];
+    td.card = e.currentTarget;
+    td.startX = touch.clientX;
+    td.startY = touch.clientY;
+    td.timer = setTimeout(() => beginTouchDrag(touch), LONG_PRESS_MS);
+  }
+
+  function beginTouchDrag(touch) {
+    td.active = true;
+    const rect = td.card.getBoundingClientRect();
+    td.offsetX = touch.clientX - rect.left;
+    td.offsetY = touch.clientY - rect.top;
+
+    // Clone
+    td.clone = td.card.cloneNode(true);
+    td.clone.style.cssText = `
+      position: fixed;
+      width: ${rect.width}px;
+      left: ${rect.left}px;
+      top: ${rect.top}px;
+      z-index: 9999;
+      opacity: 0.92;
+      pointer-events: none;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-drag);
+      background: var(--card-hover);
+      transform: scale(1.04);
+      transition: transform 0.1s;
+    `;
+    document.body.appendChild(td.clone);
+    td.card.style.opacity = '0.3';
+
+    document.getElementById('drag-hint').style.display = 'block';
+    if (navigator.vibrate) navigator.vibrate(30);
+
+    requestAnimationFrame(autoScrollTick);
+  }
+
+  // Scrolls the column under the finger while it's held near the column's top or bottom edge
+  function autoScrollTick() {
+    if (!td.active) return;
+    if (td.scrollCol && td.scrollDy) {
+      td.scrollCol.scrollTop += td.scrollDy;
+      td.scrollCol.querySelector('.card-list').scrollTop += td.scrollDy;
+    }
+    requestAnimationFrame(autoScrollTick);
+  }
+
+  function clearTouchHighlights() {
+    document.querySelectorAll('.tab-btn.drag-target').forEach(btn => btn.classList.remove('drag-target'));
+    document.querySelectorAll('.column.drop-target').forEach(col => col.classList.remove('drop-target'));
+    document.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+  }
+
+  function onTouchMove(e) {
+    if (!td.card) return;
+    const touch = e.touches[0];
+    const dx = Math.abs(touch.clientX - td.startX);
+    const dy = Math.abs(touch.clientY - td.startY);
+
+    if (!td.active) {
+      if (dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX) cancelTouchDrag();
+      return;
+    }
+
+    e.preventDefault();
+
+    td.clone.style.left = (touch.clientX - td.offsetX) + 'px';
+    td.clone.style.top = (touch.clientY - td.offsetY) + 'px';
+
+    updateDropTarget(touch.clientX, touch.clientY, true);
+  }
+
+  // Works out what's under the finger: a tab (move to that column) or another card
+  // (reorder around it). The clone is hidden while hit-testing so it can't get in the way.
+  function updateDropTarget(x, y, withAutoScroll) {
+    td.clone.style.visibility = 'hidden';
+    const el = document.elementFromPoint(x, y);
+    td.clone.style.visibility = '';
+
+    clearTouchHighlights();
+    td.overTab = null;
+    td.overCard = null;
+    td.overCol = null;
+    td.scrollCol = null;
+    td.scrollDy = 0;
+    if (!el) return;
+
+    // Over a tab: move to that column
+    const btn = el.closest('.tab-btn');
+    if (btn) {
+      btn.classList.add('drag-target');
+      td.overTab = btn.dataset.tab;
+      return;
+    }
+
+    // Over another card: reorder relative to it
+    const overCard = el.closest('.card');
+    if (overCard && overCard !== td.card) {
+      td.overAfter = isAfterMidpoint(overCard, y);
+      overCard.classList.add(td.overAfter ? 'drag-over-bottom' : 'drag-over-top');
+      td.overCard = overCard;
+    }
+
+    // Over another column's empty space (e.g. the next column peeking in): add to its end
+    const overColEl = el.closest('.column');
+    if (!td.overCard && overColEl && overColEl.dataset.colId !== td.card.dataset.colId) {
+      overColEl.classList.add('drop-target');
+      td.overCol = overColEl.dataset.colId;
+    }
+
+    // Near the top/bottom of a column: auto-scroll it
+    const col = withAutoScroll && el.closest('.column');
+    if (col) {
+      const rect = col.getBoundingClientRect();
+      td.scrollCol = col;
+      if (y < rect.top + AUTOSCROLL_EDGE_PX) td.scrollDy = -AUTOSCROLL_SPEED;
+      else if (y > rect.bottom - AUTOSCROLL_EDGE_PX) td.scrollDy = AUTOSCROLL_SPEED;
+    }
+  }
+
+  function onTouchEnd(e, recheckTarget = true) {
+    clearTimeout(td.timer);
+    if (!td.active) { cancelTouchDrag(); return; }
+    td.active = false; // stops auto-scroll
+
+    // Re-check what's under the finger where it was lifted (iOS Safari doesn't always
+    // send a final touchmove over the drop target). Keep the last target if nothing is found.
+    const touch = recheckTarget && e.changedTouches && e.changedTouches[0];
+    if (touch) {
+      const lastTab = td.overTab, lastCard = td.overCard, lastAfter = td.overAfter, lastCol = td.overCol;
+      updateDropTarget(touch.clientX, touch.clientY, false);
+      if (!td.overTab && !td.overCard && !td.overCol) {
+        td.overTab = lastTab; td.overCard = lastCard; td.overAfter = lastAfter; td.overCol = lastCol;
+      }
+    }
+
+    document.getElementById('drag-hint').style.display = 'none';
+    clearTouchHighlights();
+
+    const cardId = td.card.dataset.cardId;
+    let moved = false;
+    let destColId = null;
+
+    if (td.overTab) {
+      destColId = td.overTab;
+      moved = moveCard(cardId, destColId);
+    } else if (td.overCard) {
+      destColId = td.overCard.dataset.colId;
+      moved = moveCard(cardId, destColId, td.overCard.dataset.cardId, td.overAfter);
+    } else if (td.overCol) {
+      destColId = td.overCol;
+      moved = moveCard(cardId, destColId);
+    }
+
+    if (moved) {
+      if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+      // The screen stays on the selected tab's column, wherever the card was dropped
+      render();
+    } else {
+      td.card.style.opacity = '';
+    }
+
+    cleanupTouchDrag();
+  }
+
+  // iOS can send touchcancel instead of touchend when a drag ends; if the finger was
+  // over a highlighted drop target, treat it as a drop rather than throwing it away
+  function onTouchCancel(e) {
+    if (td.active && (td.overTab || td.overCard || td.overCol)) onTouchEnd(e, false);
+    else cancelTouchDrag();
+  }
+
+  function cancelTouchDrag() {
+    clearTimeout(td.timer);
+    if (td.card) td.card.style.opacity = '';
+    document.getElementById('drag-hint').style.display = 'none';
+    clearTouchHighlights();
+    cleanupTouchDrag();
+  }
+
+  function cleanupTouchDrag() {
+    if (td.clone) { td.clone.remove(); td.clone = null; }
+    td.active = false;
+    td.card = null;
+    td.overTab = null;
+    td.overCard = null;
+    td.overCol = null;
+    td.scrollCol = null;
+    td.scrollDy = 0;
+    td.timer = null;
+  }
+
+  // ─── Keyboard moving ─────────────────────────────────────────────────
+  // Alt+↑/↓ reorders, Alt+←/→ moves between columns, Enter edits
+  function focusCard(cardId) {
+    const el = document.querySelector(`.card[data-card-id="${cardId}"]`);
+    if (el) {
+      el.focus({ preventScroll: true });
+      // On mobile, don't slide the board away from the selected tab's column
+      if (window.innerWidth > 767) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  }
+
+  document.getElementById('board').addEventListener('keydown', e => {
+    const cardEl = e.target;
+    if (!cardEl.classList || !cardEl.classList.contains('card')) return;
+
+    const cardId = cardEl.dataset.cardId;
+    const loc = findCard(cardId);
+    if (!loc) return;
+    const colIdx = boardData.columns.indexOf(loc.col);
+    let moved = false;
+    let destColId = loc.col.id;
+
+    if (e.altKey && e.key === 'ArrowUp' && loc.idx > 0) {
+      moved = moveCard(cardId, destColId, loc.col.cards[loc.idx - 1].id, false);
+    } else if (e.altKey && e.key === 'ArrowDown' && loc.idx < loc.col.cards.length - 1) {
+      moved = moveCard(cardId, destColId, loc.col.cards[loc.idx + 1].id, true);
+    } else if (e.altKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+      const target = boardData.columns[colIdx + (e.key === 'ArrowLeft' ? -1 : 1)];
+      if (target) {
+        destColId = target.id;
+        moved = moveCard(cardId, destColId);
+      }
+    } else {
+      return;
+    }
+
+    e.preventDefault();
+    if (moved) {
+      render();
+      focusCard(cardId);
+    }
+  });
+
+  // ─── Tab switching ────────────────────────────────────────────────────
+  let activeTab = 'values';
+  let snapObserver = null;
+
+  function switchTab(colId) {
+    activeTab = colId;
+    setActiveTabUI(colId);
+    showColumn(colId, true);
+  }
+
+  // Scrolls the board sideways so colId's column is the one in view
+  function showColumn(colId, smooth) {
+    const board = document.getElementById('board');
+    const col = board.querySelector(`.column[data-col-id="${colId}"]`);
+    if (!col) return;
+    const left = board.scrollLeft + col.getBoundingClientRect().left - board.getBoundingClientRect().left;
+    if (smooth) {
+      board.scrollTo({ left, behavior: 'smooth' });
+    } else {
+      // The board's CSS asks for smooth scrolling; switch it off for an immediate jump
+      board.style.scrollBehavior = 'auto';
+      board.scrollLeft = left;
+      board.style.scrollBehavior = '';
+    }
+  }
+
+  function setActiveTabUI(colId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === colId);
+    });
+  }
+
+  function setupSnapObserver() {
+    const board = document.getElementById('board');
+    if (snapObserver) snapObserver.disconnect();
+    snapObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const colId = entry.target.dataset.colId;
+          activeTab = colId;
+          setActiveTabUI(colId);
+        }
+      });
+    }, { root: board, threshold: 0.5 });
+    document.querySelectorAll('.column').forEach(col => snapObserver.observe(col));
+  }
+
+  // ─── Card CRUD ────────────────────────────────────────────────────────
+  function addCard(colId) {
+    document.getElementById('modal-title').textContent = 'Add Value';
+    document.getElementById('modal-name').value = '';
+    document.getElementById('modal-desc').value = '';
+    modalMode = 'add';
+    modalTarget = { colId };
+    document.getElementById('modal').classList.add('active');
+    document.getElementById('modal-name').focus();
+  }
+
+  function saveModal() {
+    const name = document.getElementById('modal-name').value.trim();
+    const desc = document.getElementById('modal-desc').value.trim();
+    if (!name) return;
+
+    if (modalMode === 'add') {
+      const col = boardData.columns.find(c => c.id === modalTarget.colId);
+      col.cards.push({ id: 'c' + (nextId++), title: name, desc });
+    }
+
+    closeModal();
+    render();
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    document.getElementById('modal-desc').style.display = '';
+    modalMode = null;
+    modalTarget = null;
+  }
+
+  // ─── Export PDF ───────────────────────────────────────────────────────
+  // jsPDF's built-in fonts only cover basic Latin characters, so swap typographic
+  // punctuation for plain equivalents and drop anything else (e.g. emoji)
+  function pdfText(str) {
+    return String(str)
+      .replace(/[—–]/g, '-')
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/…/g, '...')
+      .replace(/[^\x00-\xFF]/g, '')
+      .trim();
+  }
+
+  // Light-background versions of the site's black / purple / green palette
+  // (purple and green darkened slightly so text stays readable on white paper)
+  const PDF_COLORS = {
+    black:      [17, 18, 27],    // --bg
+    purple:     [109, 92, 232],  // --accent, darkened for print
+    green:      [34, 197, 94],   // landing page accent
+    cardFill:   [245, 243, 255],
+    cardBorder: [221, 214, 254],
+    desc:       [75, 80, 99],
+    muted:      [120, 125, 145],
+  };
+
+  // Most-narrowed-down first; the unsorted Values pile is left out
+  const PDF_COLUMN_ORDER = ['top', 'top10', 'top20', 'important'];
+
+  // Lays the columns out side by side; returns the height of the tallest one.
+  // With draw=false it only measures, so exportBoard can find a scale that fits.
+  function layoutPdfColumns(doc, cols, left, top, colW, colGap, s, withDesc, draw) {
+    const PT = 0.3528; // mm per point
+    const pad = 2.5 * s;
+    const titleSize = 10 * s, descSize = 8 * s;
+    const titleLH = titleSize * PT * 1.2, descLH = descSize * PT * 1.2;
+    const headH = 9 * s;
+    let maxH = 0;
+
+    cols.forEach((col, i) => {
+      const x = left + i * (colW + colGap);
+      let y = top;
+      if (col.title == null) { // untitled column: cards only
+        y -= headH + 2.5 * s;
+      } else if (draw) {
+        doc.setFillColor(...PDF_COLORS.black);
+        doc.roundedRect(x, y, colW, headH, 1.5, 1.5, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11 * s);
+        doc.setTextColor(...PDF_COLORS.green);
+        const head = doc.splitTextToSize(pdfText(col.title).toUpperCase() + '  (' + col.cards.length + ')', colW - pad * 2)[0];
+        doc.text(head, x + pad, y + headH * 0.66);
+      }
+      y += headH + 2.5 * s;
+
+      col.cards.forEach(card => {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(titleSize);
+        const titleLines = doc.splitTextToSize(pdfText(card.title), colW - pad * 2);
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(descSize);
+        const descLines = withDesc && card.desc ? doc.splitTextToSize(pdfText(card.desc), colW - pad * 2) : [];
+        const titleH = titleLines.length * titleLH;
+        const descH = descLines.length ? 0.8 * s + descLines.length * descLH : 0;
+        const cardH = pad * 1.6 + titleH + descH;
+
+        if (draw) {
+          doc.setFillColor(...PDF_COLORS.cardFill);
+          doc.setDrawColor(...PDF_COLORS.cardBorder);
+          doc.setLineWidth(0.2);
+          doc.roundedRect(x, y, colW, cardH, 1.2, 1.2, 'FD');
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(titleSize);
+          doc.setTextColor(...PDF_COLORS.purple);
+          doc.text(titleLines, x + pad, y + pad * 0.8 + titleLH * 0.8, { lineHeightFactor: 1.2 });
+
+          if (descLines.length) {
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(descSize);
+            doc.setTextColor(...PDF_COLORS.desc);
+            doc.text(descLines, x + pad, y + pad * 0.8 + titleH + 0.8 * s + descLH * 0.8, { lineHeightFactor: 1.2 });
+          }
+        }
+        y += cardH + 1.8 * s;
+      });
+
+      maxH = Math.max(maxH, y - top);
+    });
+    return maxH;
+  }
+
+  // Title on the left, email and date on the right; returns where content starts.
+  function drawPdfHeader(doc, title, userEmail, stamp) {
+    const pageW = doc.internal.pageSize.getWidth();
+    const margin = PDF_MARGIN;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(...PDF_COLORS.purple);
+    doc.text(title, margin, margin + 6);
+
+    doc.setFontSize(11);
+    doc.setTextColor(...PDF_COLORS.black);
+    doc.text('Email: ' + userEmail, pageW - margin, margin + 2, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...PDF_COLORS.muted);
+    doc.text('Exported: ' + stamp, pageW - margin, margin + 7, { align: 'right' });
+
+    doc.setDrawColor(...PDF_COLORS.green);
+    doc.setLineWidth(0.5);
+    doc.line(margin, margin + 10, pageW - margin, margin + 10);
+    return margin + 15;
+  }
+
+  // Draws the columns across the page, shrinking the text until the tallest
+  // column fits, and dropping descriptions only if it still won't fit readably.
+  // With keepDesc, descriptions are always kept and the text starts a little larger.
+  function drawPdfColumnsToFit(doc, cols, top, keepDesc = false) {
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const colGap = 5;
+    const colW = (pageW - PDF_MARGIN * 2 - colGap * (cols.length - 1)) / cols.length;
+    const available = pageH - PDF_MARGIN - top;
+    const attempts = [];
+    if (keepDesc) {
+      for (let s = 1.25; s >= 0.4; s -= 0.05) attempts.push({ s, withDesc: true });
+    } else {
+      for (let s = 1; s >= 0.6; s -= 0.05) attempts.push({ s, withDesc: true });
+      for (let s = 1; s >= 0.4; s -= 0.05) attempts.push({ s, withDesc: false });
+    }
+    const fit = attempts.find(a => layoutPdfColumns(doc, cols, PDF_MARGIN, top, colW, colGap, a.s, a.withDesc, false) <= available)
+      || attempts[attempts.length - 1];
+    layoutPdfColumns(doc, cols, PDF_MARGIN, top, colW, colGap, fit.s, fit.withDesc, true);
+  }
+
+  const PDF_MARGIN = 12;
+
+  function exportBoard() {
+    if (!window.jspdf) {
+      alert('The PDF tool failed to load. Check your internet connection and refresh the page.');
+      return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+
+    if (!checkEmail(true)) {
+      document.getElementById('user-email').focus();
+      return;
+    }
+    const userEmail = pdfText(document.getElementById('user-email').value.trim());
+    const exportDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const exportTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    const stamp = exportDate + ' at ' + exportTime;
+
+    // Page 1: the ranked columns, side by side
+    let top = drawPdfHeader(doc, 'My Values Board', userEmail, stamp);
+
+    const ordered = PDF_COLUMN_ORDER.map(id => boardData.columns.find(c => c.id === id)).filter(Boolean);
+    const custom = boardData.columns.filter(c => c.id !== 'values' && !PDF_COLUMN_ORDER.includes(c.id));
+    const pdfColumns = [...ordered, ...custom].filter(c => c.cards.length > 0);
+
+    if (pdfColumns.length === 0) {
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(11);
+      doc.setTextColor(...PDF_COLORS.black);
+      doc.text('No values have been selected yet.', PDF_MARGIN, top + 5);
+    } else {
+      drawPdfColumnsToFit(doc, pdfColumns, top);
+    }
+
+    // Page 2: the Top 3 and Top 10 side by side, always with their descriptions
+    const topCols = ['top', 'top10']
+      .map(id => boardData.columns.find(c => c.id === id))
+      .filter(c => c && c.cards.length > 0);
+    if (topCols.length > 0) {
+      doc.addPage('a4', 'landscape');
+      top = drawPdfHeader(doc, 'My Top Values - Descriptions', userEmail, stamp);
+      drawPdfColumnsToFit(doc, topCols, top, true);
+    }
+
+    // Last page: everything still in the unsorted Values pile, flowed into a grid
+    const remaining = (boardData.columns.find(c => c.id === 'values') || { cards: [] }).cards;
+    if (remaining.length > 0) {
+      doc.addPage('a4', 'landscape');
+      top = drawPdfHeader(doc, 'Remaining Values  (' + remaining.length + ')', userEmail, stamp);
+      const perCol = Math.ceil(remaining.length / 4);
+      const grid = [];
+      for (let i = 0; i < remaining.length; i += perCol) {
+        grid.push({ title: null, cards: remaining.slice(i, i + perCol) });
+      }
+      drawPdfColumnsToFit(doc, grid, top);
+    }
+
+    doc.save('my-values-board.pdf');
+  }
+
+  // ─── Keyboard ─────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && document.getElementById('modal').classList.contains('active')) {
+      if (document.activeElement.tagName !== 'TEXTAREA') saveModal();
+    }
+  });
+
+  // ─── Init ─────────────────────────────────────────────────────────────
+  // Bump DATA_VERSION whenever DEFAULT_BOARD's values or wording change. Returning
+  // visitors then get new values added to their Values pile and updated wording on
+  // any value they haven't edited themselves. Values they deleted stay deleted.
+  const DATA_VERSION = 2;
+
+  // Titles used before DATA_VERSION existed, so a renamed default isn't mistaken for a user edit
+  const LEGACY_TITLES = { c5: 'Forgivingness' };
+
+  function freshBoard() {
+    const board = JSON.parse(JSON.stringify(DEFAULT_BOARD));
+    board.version = DATA_VERSION;
+    board.deleted = [];
+    return board;
+  }
+
+  function loadBoard() {
+    let saved = null;
+    try { saved = JSON.parse(storageGet('valuesBoard')); } catch (e) {}
+    if (!saved || !Array.isArray(saved.columns) || saved.columns.length === 0) return freshBoard();
+
+    const defaults = DEFAULT_BOARD.columns[0].cards;
+    const savedCards = {};
+    saved.columns.forEach(col => {
+      if (!Array.isArray(col.cards)) col.cards = [];
+      col.cards.forEach(c => { savedCards[c.id] = c; });
+    });
+
+    if (!saved.version) {
+      // Saved before versioning: every default existed then, so a missing one was deleted,
+      // and one whose text differs was edited by the user
+      saved.deleted = defaults.filter(d => !savedCards[d.id]).map(d => d.id);
+      defaults.forEach(d => {
+        const c = savedCards[d.id];
+        if (!c) return;
+        const titleMatches = c.title === d.title || c.title === LEGACY_TITLES[d.id];
+        if (!titleMatches || (c.desc || '') !== d.desc) c.edited = true;
+      });
+      const topCol = saved.columns.find(c => c.id === 'top');
+      if (topCol && topCol.title === 'Top Values') topCol.title = 'Top 3 Values';
+    }
+
+    if (saved.version !== DATA_VERSION) {
+      const deleted = new Set(saved.deleted || []);
+      const valuesCol = saved.columns.find(c => c.id === 'values') || saved.columns[0];
+      defaults.forEach(d => {
+        const c = savedCards[d.id];
+        if (c) {
+          if (!c.edited) { c.title = d.title; c.desc = d.desc; }
+        } else if (!deleted.has(d.id)) {
+          valuesCol.cards.push({ ...d });
+        }
+      });
+      saved.version = DATA_VERSION;
+    }
+
+    if (!Array.isArray(saved.deleted)) saved.deleted = [];
+    return saved;
+  }
+
+  boardData = loadBoard();
+
+  // Continue numbering above any saved card/column ids so new ones never collide
+  boardData.columns.forEach(col => {
+    [col.id, ...col.cards.map(c => c.id)].forEach(id => {
+      const n = parseInt(String(id).replace(/^\D+/, ''), 10);
+      if (!isNaN(n) && n >= nextId) nextId = n + 1;
+    });
+  });
+
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const emailInput = document.getElementById('user-email');
+
+  // Shows or clears the email error; an empty field only counts as an error on export.
+  function checkEmail(required) {
+    const value = emailInput.value.trim();
+    const valid = EMAIL_PATTERN.test(value);
+    const showError = !valid && (required || value !== '');
+    emailInput.classList.toggle('invalid', showError);
+    emailInput.setAttribute('aria-invalid', showError ? 'true' : 'false');
+    document.getElementById('email-field').classList.toggle('show-error', showError);
+    return valid;
+  }
+
+  function toggleSettings() {
+    const open = document.getElementById('settings-drawer').classList.toggle('open');
+    document.getElementById('settings-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  storageRemove('valuesBoardName');
+  const savedEmail = storageGet('valuesBoardEmail');
+  if (savedEmail) {
+    emailInput.value = savedEmail;
+  }
+
+  emailInput.addEventListener('input', function() {
+    storageSet('valuesBoardEmail', this.value.trim());
+    if (this.classList.contains('invalid')) checkEmail(false);
+  });
+  emailInput.addEventListener('blur', () => checkEmail(false));
+
+  function resetBoard() {
+    if (confirm('This will put every card back in its original place and clear your email. Are you sure?')) {
+      storageRemove('valuesBoard');
+      storageRemove('valuesBoardEmail');
+      location.reload();
+    }
+  }
+
+  function toggleInstructions() {
+    const body = document.getElementById('instructions-body');
+    const arrow = document.getElementById('arrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+
+  render();
+</script>
+</body>
+</html>

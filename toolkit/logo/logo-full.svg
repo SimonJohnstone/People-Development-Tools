@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" role="img" aria-label="Development Toolkit">
+  <g>
+    <path d="M34 98 Q60 90 86 98" fill="none" stroke="#a89aab" stroke-width="4" stroke-linecap="round"/>
+    <path d="M60 94 V50" fill="none" stroke="#e85d5d" stroke-width="6" stroke-linecap="round"/>
+    <path d="M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z" fill="#e85d5d"/>
+    <path d="M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z" fill="#f4a3a3"/>
+    <circle cx="60" cy="31" r="10" fill="#f0e6e6"/>
+  </g>
+  <text x="122" y="52" font-family="'DM Sans', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="3.5" fill="#e85d5d">PEOPLE &amp; CULTURE</text>
+  <text x="120" y="92" font-family="'Playfair Display', Georgia, serif" font-size="38" font-weight="700" fill="#f0e6e6">Development <tspan fill="#e85d5d">Toolkit</tspan></text>
+</svg>

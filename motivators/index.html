@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Personal Motivators</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:          #11121b;
+      --col-bg:      #181a27;
+      --col-header:  #0b0c13;
+      --card-bg:     #1a1d2c;
+      --card-hover:  #1f2235;
+      --accent:      #8b7cf6;
+      --accent-soft: rgba(139, 124, 246, 0.10);
+      --text:        #f1f2f7;
+      --text-muted:  #8a8fa8;
+      --text-desc:   #d7d9e4;
+      --border:      rgba(139, 124, 246, 0.15);
+      --shadow:      0 2px 8px rgba(0,0,0,0.30);
+      --radius:      10px;
+      --tab-h:       64px;
+      --top-h:       56px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overscroll-behavior: none;
+    }
+
+    /* ─── Toolkit header (shared by the Values and Motivators boards) ─── */
+    .tk-header {
+      position: sticky;
+      top: 0;
+      z-index: 300;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 24px;
+      padding-top: calc(14px + env(safe-area-inset-top));
+      background-color: var(--bg);
+      background-image: linear-gradient(180deg, rgba(139, 124, 246,0.06) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tk-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+    .tk-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      color: var(--accent);
+    }
+
+    .tk-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Logo: links back to the toolkit home page */
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #181a27;
+      border: 1px solid rgba(139, 124, 246, 0.25);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .home-link svg { width: 25px; height: 26px; display: block; }
+    .home-link:hover { border-color: rgba(139, 124, 246, 0.6); background: #0b0c13; }
+    .home-link:focus-visible { outline: 2px solid #8b7cf6; outline-offset: 2px; }
+
+    /* Email + actions: inline on desktop, a drop-down panel on mobile */
+    .tk-settings { display: flex; align-items: center; gap: 10px; }
+    .tk-label { display: none; }
+
+    .tk-email-field { position: relative; display: inline-flex; }
+
+    .tk-email {
+      width: 220px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 14px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .tk-email::placeholder { color: var(--text-muted); font-style: italic; }
+    .tk-email:focus { border-color: var(--accent); }
+    .tk-email.invalid { border-color: #e05555; }
+
+    .tk-email-error {
+      position: absolute;
+      top: 100%;
+      left: 4px;
+      margin-top: 3px;
+      font-size: 11px;
+      color: #e05555;
+      white-space: nowrap;
+      display: none;
+    }
+    .tk-email-field.show-error .tk-email-error { display: block; }
+
+    .tk-actions { display: flex; gap: 8px; }
+
+    .tk-btn {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .tk-btn:active { opacity: 0.75; }
+    .tk-btn-primary { background: rgba(139, 124, 246,0.12); color: var(--accent); }
+    .tk-btn-muted { background: transparent; color: var(--text-muted); }
+
+    @media (hover: hover) {
+      .tk-btn:hover { background: rgba(139, 124, 246,0.2); transform: translateY(-1px); }
+      .tk-btn-muted:hover { color: var(--text); }
+    }
+
+    .tk-settings-toggle {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: rgba(139, 124, 246,0.10);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 9px 12px;
+      cursor: pointer;
+    }
+    .tk-settings-toggle[aria-expanded="true"] { background: rgba(139, 124, 246,0.22); }
+
+    @media (max-width: 767px) {
+      .tk-header {
+        flex-wrap: wrap;
+        gap: 0 12px;
+        padding: 10px 16px;
+        padding-top: calc(10px + env(safe-area-inset-top));
+      }
+      .tk-title { font-size: 20px; }
+      .tk-subtitle { display: none; }
+      .home-link { width: 36px; height: 36px; }
+      .home-link svg { width: 22px; height: 23px; }
+
+      .tk-settings-toggle { display: inline-flex; }
+
+      .tk-settings {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        width: calc(100% + 32px);
+        margin: 10px -16px -10px;
+        padding: 14px 16px;
+        background: var(--col-header);
+        border-top: 1px solid var(--border);
+      }
+      .tk-settings.open { display: flex; }
+
+      .tk-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .tk-email-field { display: flex; flex-direction: column; }
+      .tk-email { width: 100%; padding: 12px 14px; font-size: 16px; border-radius: 10px; }
+      .tk-email-error { position: static; margin-top: 6px; white-space: normal; }
+      .tk-actions { gap: 10px; }
+      .tk-btn { flex: 1; padding: 12px; font-size: 15px; border-radius: 10px; }
+    }
+
+    /* ══════════════════════════════════════
+       INSTRUCTIONS
+    ══════════════════════════════════════ */
+    .intro-panel {
+      margin: 12px;
+      background: var(--col-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .intro-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .intro-toggle h2 { font-size: 0.88rem; font-weight: 700; color: var(--accent); }
+    .intro-chevron { color: var(--accent); font-size: 0.75rem; transition: transform 0.2s; }
+    .intro-chevron.open { transform: rotate(180deg); }
+
+    .intro-body { display: none; padding: 0 16px 14px; }
+    .intro-body.visible { display: block; }
+
+    .intro-body p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .intro-steps { list-style: none; counter-reset: steps; display: flex; flex-direction: column; gap: 10px; }
+
+    .intro-steps li {
+      counter-increment: steps;
+      display: flex;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .intro-steps li::before {
+      content: counter(steps);
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700;
+    }
+
+    /* ══════════════════════════════════════
+       COLUMN VIEW  (mobile: single active column)
+    ══════════════════════════════════════ */
+
+    /* Mobile: body is a full-height flex column so col-view fills the gap */
+    @media (max-width: 767px) {
+      html, body {
+        height: 100%;
+        height: 100dvh;
+        /* Override min-height: 100vh — on iOS Safari 100vh is taller than the visible
+           screen, which pushed the tab bar behind Safari's bottom toolbar */
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .intro-panel {
+        flex: 0 0 auto;
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+
+      .col-view {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: row;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        padding: 0;
+      }
+
+      .col-view::-webkit-scrollbar { display: none; }
+
+      /* Spacer so the last section can snap to start */
+      .col-view::after {
+        content: "";
+        flex: 0 0 25vw;
+        display: block;
+      }
+
+      .col-section {
+        flex: 0 0 75vw !important;
+        display: flex !important;
+        flex-direction: column;
+        scroll-snap-align: start;
+        overflow-y: auto;
+        min-height: 0;
+        padding: 8px 6px 12px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .col-section::-webkit-scrollbar { display: none; }
+
+      /* col-wrap fills the section height */
+      .col-section .col-wrap {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        background: var(--col-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .col-section .col-cards { flex: 1; overflow-y: auto; scrollbar-width: none; }
+      .col-section .col-cards::-webkit-scrollbar { display: none; }
+
+      /* Allow horizontal swipe on cards (don't block it) */
+      .card { touch-action: auto; }
+
+      .tab-bar {
+        position: sticky;
+        bottom: 0;
+        flex: 0 0 auto;
+        height: auto;
+        min-height: var(--tab-h);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .toast { bottom: calc(var(--tab-h) + 12px + env(safe-area-inset-bottom)); }
+      .drag-hint { bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); }
+    }
+
+    .col-view {
+      /* fallback for very old browsers; overridden by the media query above on mobile */
+    }
+
+    /* column label row */
+    .col-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 4px 8px;
+    }
+
+    .col-label-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .col-label-count {
+      background: rgba(139, 124, 246,0.18);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 20px;
+      padding: 2px 8px;
+    }
+
+    /* ══════════════════════════════════════
+       CARD
+    ══════════════════════════════════════ */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 14px 12px;
+      margin-bottom: 8px;
+      transition: background 0.12s;
+      touch-action: pan-y;
+      /* Stop long-press text selection / callout menus, which cancel the touch drag */
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .card-main { display: flex; align-items: flex-start; gap: 10px; }
+
+    .card-text { flex: 1; min-width: 0; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-size: 0.83rem;
+      color: var(--text-desc);
+      font-style: italic;
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    /* expand toggle */
+    .card-expand {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      cursor: pointer;
+      padding: 4px;
+      margin-top: 1px;
+      line-height: 1;
+      transition: color 0.15s, transform 0.2s;
+    }
+    .card-expand.open { transform: rotate(180deg); color: var(--accent); }
+
+    /* − / + buttons (top right): move a card down / up one column */
+    .card-moves {
+      flex-shrink: 0;
+      display: flex;
+      gap: 6px;
+    }
+
+    .card-move-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation; /* no double-tap zoom on quick taps */
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    @media (hover: hover) {
+      .card-move-btn:hover:not(:disabled) {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+    }
+
+    .card-move-btn:active:not(:disabled) { background: var(--accent); color: #fff; }
+
+    .card-move-btn:disabled { opacity: 0.25; cursor: default; }
+
+    .card-detail {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+    .card-detail.visible { display: block; }
+
+    /* empty state */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    /* limit warning toast */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--tab-h) + 12px + env(safe-area-inset-bottom));
+      left: 50%; transform: translateX(-50%);
+      background: rgba(139, 124, 246,0.9);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 20px;
+      white-space: nowrap;
+      z-index: 400;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ══════════════════════════════════════
+       BOTTOM TAB BAR
+    ══════════════════════════════════════ */
+    .tab-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: calc(var(--tab-h) + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 300;
+      background: var(--col-header);
+      border-top: 1px solid var(--border);
+      display: flex;
+    }
+
+    .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      padding: 8px 4px;
+      transition: color 0.15s;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .tab.active { color: var(--accent); }
+
+    .tab-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .tab-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.15s;
+    }
+
+    .tab.active .tab-dot { background: var(--accent); }
+
+    /* ── Touch drag states ── */
+    .card.touch-dragging {
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    /* Floating clone created during touch drag */
+    .touch-clone {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      border-radius: var(--radius);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      transform: scale(1.05) rotate(1.5deg);
+      transition: transform 0.1s;
+      opacity: 0.93;
+      will-change: left, top;
+    }
+
+    /* Tab bar drop targets during drag */
+    .tab.drag-target {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .tab.drag-over-tab {
+      background: rgba(139, 124, 246,0.25);
+      color: var(--accent);
+      transform: scaleY(1.08);
+    }
+
+    /* Drag hint banner shown above tab bar when drag starts */
+    .drag-hint {
+      position: fixed;
+      bottom: calc(var(--tab-h) + env(safe-area-inset-bottom));
+      left: 0; right: 0;
+      background: rgba(139, 124, 246,0.15);
+      border-top: 1px solid rgba(139, 124, 246,0.3);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 7px;
+      z-index: 299;
+      display: none;
+      letter-spacing: 0.03em;
+    }
+
+    .drag-hint.visible { display: block; }
+
+    /* ══════════════════════════════════════
+       DESKTOP LAYOUT (≥ 768 px)
+    ══════════════════════════════════════ */
+    @media (min-width: 768px) {
+      :root { --top-h: 60px; }
+
+      /* Hide mobile-only controls */
+      .tab-bar { display: none !important; }
+
+      /* Desktop 3-column board */
+      .intro-panel {
+        margin: 16px 20px;
+        border-radius: 14px;
+      }
+
+      .col-view {
+        padding: 0 20px 24px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      /* Hide mobile column label, show desktop column header */
+      .col-section { all: unset; display: contents; }
+
+      .col-section .col-wrap {
+        background: var(--col-bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Show all columns at once on desktop */
+      .col-section { display: block !important; }
+
+      .col-label {
+        background: var(--col-header);
+        border-bottom: 1px solid var(--border);
+        padding: 13px 16px 11px;
+        border-radius: 0;
+        margin: 0;
+      }
+
+      .col-label-title { color: var(--text); }
+
+      .col-cards { padding: 10px 10px 6px; }
+
+      .card { margin-bottom: 8px; cursor: grab; }
+      .card:active { cursor: grabbing; }
+      .card.dragging { opacity: 0.35; transform: scale(0.97); }
+
+
+      .drop-zone {
+        min-height: 60px;
+        border-radius: 0 0 14px 14px;
+        transition: background 0.15s;
+      }
+
+      .drop-zone.drag-over {
+        background: var(--accent-soft);
+        outline: 2px dashed rgba(139, 124, 246,0.35);
+        outline-offset: -4px;
+      }
+
+      .empty-state { padding: 32px 12px; font-size: 0.82rem; }
+
+      .toast { bottom: 16px; }
+    }
+
+    /* ══════════════════════════════════════
+       PRINT
+    ══════════════════════════════════════ */
+    #print-page { display: none; }
+
+    /* Off-screen copy used to measure the print layout so it can be scaled to one page */
+    #print-page.pp-measure {
+      display: flex !important;
+      flex-direction: column;
+      position: absolute;
+      left: -10000px;
+      top: 0;
+      width: 269mm; /* A4 landscape width minus page margins */
+      font-family: 'Inter', sans-serif;
+    }
+
+    @media print {
+      @page { size: A4 landscape; margin: 1.2cm 1.4cm; }
+
+      body, html { background: #fff !important; }
+      .tk-header, .intro-panel, .col-view, .tab-bar, .toast { display: none !important; }
+
+      #print-page {
+        display: flex !important;
+        flex-direction: column;
+        font-family: 'Inter', sans-serif;
+        color: #1a1015;
+      }
+
+      .pp-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        border-bottom: 2px solid #8b7cf6;
+        padding-bottom: 8px;
+        margin-bottom: 14px;
+      }
+
+      .pp-header h1 { font-size: 18pt; font-weight: 700; color: #8b7cf6; }
+
+      .pp-meta { font-size: 9pt; color: #888; text-align: right; line-height: 1.5; }
+      .pp-meta strong { color: #333; font-size: 10pt; }
+
+      .pp-columns { display: flex; gap: 14px; flex: 1; align-items: flex-start; }
+
+      .pp-col {
+        flex: 1 1 0;
+        min-width: 0;
+        border: 1px solid #e8d0d0;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .pp-card, .pp-col { break-inside: avoid; }
+
+      .pp-col-head {
+        background: #f5eded;
+        border-bottom: 1px solid #e8d0d0;
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .pp-col-head h2 {
+        font-size: 7.5pt;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #444;
+      }
+
+      .pp-col-badge {
+        background: rgba(139, 124, 246,0.15);
+        color: #c0392b;
+        font-size: 7pt;
+        font-weight: 700;
+        border-radius: 20px;
+        padding: 1px 7px;
+      }
+
+      .pp-col-body { padding: 8px; display: flex; flex-direction: column; gap: 5px; }
+
+      .pp-card {
+        border: 1px solid #f0dada;
+        border-radius: 5px;
+        padding: 6px 8px;
+        background: #fff;
+      }
+
+      .pp-col.top5 .pp-card { background: #fff8f8; border-color: rgba(139, 124, 246,0.35); }
+
+      .pp-card-title { font-size: 8.5pt; font-weight: 700; color: #c0392b; line-height: 1.2; }
+      .pp-col.top5 .pp-card-title { font-size: 9.5pt; }
+
+      .pp-card-desc { font-size: 7.5pt; color: #777; font-style: italic; margin-top: 1px; }
+      .pp-col.top5 .pp-card-desc { font-size: 8pt; }
+
+      .pp-empty { font-size: 7.5pt; color: #bbb; font-style: italic; text-align: center; padding: 12px 0; }
+
+      .pp-footer {
+        margin-top: 10px;
+        font-size: 7pt;
+        color: #bbb;
+        text-align: center;
+        border-top: 1px solid #f0e0e0;
+        padding-top: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Print page (hidden on screen) ── -->
+<div id="print-page">
+  <div class="pp-header">
+    <h1>Personal Motivators</h1>
+    <div class="pp-meta"><strong id="pp-name"></strong><br><span id="pp-date"></span></div>
+  </div>
+  <div class="pp-columns" id="pp-columns"></div>
+  <div class="pp-footer">Personal Motivators Kanban</div>
+</div>
+
+<!-- ── Top bar ── -->
+<header class="tk-header">
+  <div class="tk-brand">
+    <a class="home-link" href="https://simon-development-toolkit.netlify.app/" title="Back to the Development Toolkit" aria-label="Back to the Development Toolkit home page"><svg viewBox="20 20 80 84" aria-hidden="true"><path d="M34 98 Q60 90 86 98" fill="none" stroke="#8a8fa8" stroke-width="4" stroke-linecap="round"/><path d="M60 94 V50" fill="none" stroke="#8b7cf6" stroke-width="6" stroke-linecap="round"/><path d="M60 76 C43 76 30 66 27 48 C45 48 58 58 60 76 Z" fill="#8b7cf6"/><path d="M60 64 C77 64 90 54 93 36 C75 36 62 46 60 64 Z" fill="#c4bbfc"/><circle cx="60" cy="31" r="10" fill="#f1f2f7"/></svg></a>
+    <div>
+      <h1 class="tk-title">Personal Motivators</h1>
+      <div class="tk-subtitle">What energises you at work — drag to reorder</div>
+    </div>
+  </div>
+  <button type="button" class="tk-settings-toggle" id="settings-toggle" aria-expanded="false" aria-controls="settings-drawer" onclick="toggleSettings()">⚙ Settings</button>
+  <div class="tk-settings" id="settings-drawer">
+    <label class="tk-label" for="user-email">Your email</label>
+    <span class="tk-email-field" id="email-field">
+      <input type="email" id="user-email" class="tk-email" placeholder="Enter your email" maxlength="254"
+             autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false"
+             aria-describedby="email-error">
+      <span class="tk-email-error" id="email-error" role="alert">Please enter a valid email address</span>
+    </span>
+    <div class="tk-actions">
+      <button type="button" class="tk-btn tk-btn-primary" onclick="exportPDF()">Export PDF</button>
+      <button type="button" class="tk-btn tk-btn-muted" onclick="resetBoard()">Reset</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── Instructions ── -->
+<div class="intro-panel">
+  <div class="intro-toggle" onclick="toggleIntro()">
+    <h2>How to use this board</h2>
+    <span class="intro-chevron" id="intro-chevron">&#8964;</span>
+  </div>
+  <div class="intro-body" id="intro-body">
+    <p>Think about one of your best days at work — the day you left thinking "Wow, that was a great day!" You were probably doing something motivating, energising, and engaging.</p>
+    <ol class="intro-steps">
+      <li>Browse the <strong>Motivators</strong> list and tap <strong>+</strong> on the ones that resonate to add them to <strong>My 10</strong>.</li>
+      <li>In <strong>My 10</strong>, tap <strong>+</strong> on your most essential motivators to move them to <strong>Top 5</strong>. Tap <strong>−</strong> to move a card back.</li>
+      <li>Open Settings, enter your email, and tap <strong>Export PDF</strong> to save a landscape summary.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ── Column view ── -->
+<div class="col-view" id="col-view">
+
+  <!-- Section: Motivators -->
+  <div class="col-section" id="section-all">
+    <div class="col-wrap">
+      <div class="col-label">
+        <span class="col-label-title">Motivators</span>
+        <span class="col-label-count" id="count-all">20</span>
+      </div>
+      <div class="col-cards drop-zone" id="zone-all" data-limit="999" data-col="all"></div>
+    </div>
+  </div>
+
+  <!-- Section: My 10 -->
+  <div class="col-section" id="section-ten">
+    <div class="col-wrap">
+      <div class="col-label">
+        <span class="col-label-title">My 10 Motivators</span>
+        <span class="col-label-count" id="count-ten">0</span>
+      </div>
+      <div class="col-cards drop-zone" id="zone-ten" data-limit="10" data-col="ten">
+        <div class="empty-state" id="empty-ten">Tap + on a motivator to get started</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Top 5 -->
+  <div class="col-section" id="section-five">
+    <div class="col-wrap">
+      <div class="col-label">
+        <span class="col-label-title">Top 5 Motivators</span>
+        <span class="col-label-count" id="count-five">0</span>
+      </div>
+      <div class="col-cards drop-zone" id="zone-five" data-limit="5" data-col="five">
+        <div class="empty-state" id="empty-five">Tap + on a card in My 10 to build your Top 5</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── Drag hint (shown above tab bar during touch drag) ── -->
+<div class="drag-hint" id="drag-hint">Drop on a tab to move ↓</div>
+
+<!-- ── Bottom tab bar (mobile) ── -->
+<nav class="tab-bar">
+  <button class="tab active" id="tab-all" onclick="switchTab('all')">
+    <span class="tab-icon">⚡</span>
+    <span>Motivators</span>
+    <span class="tab-dot"></span>
+  </button>
+  <button class="tab" id="tab-ten" onclick="switchTab('ten')">
+    <span class="tab-icon">🎯</span>
+    <span>My 10</span>
+    <span class="tab-dot"></span>
+  </button>
+  <button class="tab" id="tab-five" onclick="switchTab('five')">
+    <span class="tab-icon">🏆</span>
+    <span>Top 5</span>
+    <span class="tab-dot"></span>
+  </button>
+</nav>
+
+<script>
+  /* ─── Data ─── */
+  const MOTIVATORS = [
+    { id: "financial-gain",      title: "Financial gain",              desc: "Significant financial rewards",                       detail: "Being motivated by earning a high salary, bonuses, commissions, or other financial compensation for your work." },
+    { id: "adventure",           title: "Adventure",                   desc: "Explore and experience new things",                   detail: "Thriving on novelty, travel, and exposure to new cultures, industries, or environments in your work." },
+    { id: "being-in-charge",     title: "Being in charge",             desc: "Authority over others, projects, decisions",          detail: "Finding energy in having decision-making power and accountability for outcomes, people, or projects." },
+    { id: "predictability",      title: "Predictability and structure",desc: "Organised work/tasks don't change",                   detail: "Preferring clear processes, defined roles, and a stable, well-organised environment with minimal surprises." },
+    { id: "making-a-difference", title: "Making a difference",         desc: "Have a positive impact",                              detail: "Being driven by the knowledge that your work contributes to something meaningful — for people, society, or the world." },
+    { id: "working-alone",       title: "Working alone",               desc: "Work on projects primarily alone",                    detail: "Preferring to focus independently without constant collaboration, enjoying deep work and self-directed tasks." },
+    { id: "working-on-a-team",   title: "Working on a team",           desc: "Have shared goals/achieve results together",          detail: "Finding energy in collaborating closely with others, sharing responsibility, and celebrating collective wins." },
+    { id: "job-security",        title: "Job security and stability",  desc: "Confidence that the job is stable",                   detail: "Valuing the assurance of long-term employment, consistent conditions, and predictable future in your role." },
+    { id: "being-the-best",      title: "Being the best",              desc: "Be an expert, sought out by others",                  detail: "Being motivated to achieve mastery in your field and being recognised as a go-to authority by peers and leaders." },
+    { id: "friendships",         title: "Friendships",                 desc: "Personal relationships at work",                      detail: "Finding meaning through genuine personal connections and close friendships formed with colleagues." },
+    { id: "influence",           title: "Influence",                   desc: "Influence others across multiple teams",              detail: "Being energised by shaping opinions, culture, strategy, or decisions beyond your immediate team or role." },
+    { id: "variety-change",      title: "Variety/Change",              desc: "Frequent change in responsibilities, tasks or setting",detail: "Thriving when no two days are the same — variety in tasks, projects, and environments keeps you engaged." },
+    { id: "autonomy",            title: "Autonomy",                    desc: "Do work without significant direction, flexibility",  detail: "Preferring to set your own agenda, work at your own pace, and make decisions without needing approval." },
+    { id: "creativity",          title: "Creativity",                  desc: "Be innovative, generate new ideas",                   detail: "Being driven by the opportunity to invent, design, imagine, and bring entirely new concepts to life." },
+    { id: "ambition",            title: "Ambition",                    desc: "Get ahead through opportunities for growth",          detail: "Motivated by career progression, promotions, expanding responsibilities, and achieving new levels of success." },
+    { id: "recognition",         title: "Recognition",                 desc: "Get positive feedback for work well done",            detail: "Finding satisfaction when your contributions are acknowledged, praised, and appreciated by others." },
+    { id: "helping-others",      title: "Helping others",              desc: "Provide support to others",                          detail: "Being energised by supporting colleagues, customers, or community — putting others' needs and growth first." },
+    { id: "work-life-balance",   title: "Work-life balance",           desc: "Time to enjoy life outside of work",                  detail: "Prioritising a clear boundary between professional and personal time, protecting space for family, hobbies, and rest." },
+    { id: "problem-solving",     title: "Problem-solving",             desc: "Solve problems and identify solutions",               detail: "Being motivated by tackling complex challenges, diagnosing root causes, and finding elegant solutions." },
+    { id: "managing-others",     title: "Managing others",             desc: "Responsible for others' work/performance",            detail: "Finding fulfilment in coaching, developing, and being accountable for the growth and results of a team." }
+  ];
+
+  /* ─── Saved progress (this browser only) ─── */
+  const BOARD_KEY = "motivatorsBoard";
+  const EMAIL_KEY = "motivatorsBoardEmail";
+
+  function storageGet(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  function storageSet(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+
+  function storageRemove(key) {
+    try { localStorage.removeItem(key); } catch (e) {}
+  }
+
+  function saveBoard() {
+    const columns = {};
+    ["all","ten","five"].forEach(col => {
+      columns[col] = [...document.getElementById(`zone-${col}`).querySelectorAll(".card")].map(c => c.dataset.id);
+    });
+    storageSet(BOARD_KEY, JSON.stringify({ v: 1, columns }));
+  }
+
+  function loadBoard() {
+    try {
+      const saved = JSON.parse(storageGet(BOARD_KEY));
+      return saved && saved.v === 1 && saved.columns ? saved.columns : null;
+    } catch (e) { return null; }
+  }
+
+  let activeTab = "all";
+  let draggedCard = null;
+
+  // Only use the browser's built-in drag-and-drop with a real mouse. On phones, a
+  // draggable element starts the browser's own drag on long-press, which cancels
+  // our touch drag (so cards could never be dropped on a tab).
+  const USE_NATIVE_DRAG = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  let toastTimer = null;
+
+  /* ════════════════════════════════════════
+     TOUCH DRAG STATE
+  ════════════════════════════════════════ */
+  let td = {
+    active:    false,
+    card:      null,
+    clone:     null,
+    timer:     null,
+    startX:    0,
+    startY:    0,
+    offsetX:   0,
+    offsetY:   0,
+    overTab:   null,
+  };
+  const LONG_PRESS_MS  = 300;
+  const MOVE_CANCEL_PX = 10;
+
+  function initTouchDrag(card) {
+    card.addEventListener("touchstart",  onTouchStart,  { passive: true  });
+    card.addEventListener("touchmove",   onTouchMove,   { passive: false });
+    card.addEventListener("touchend",    onTouchEnd,    { passive: true  });
+    card.addEventListener("touchcancel", cancelTouchDrag);
+    // Android shows a context menu on long-press; suppress it while dragging
+    card.addEventListener("contextmenu", e => { if (td.active) e.preventDefault(); });
+  }
+
+  function onTouchStart(e) {
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    td.startX = touch.clientX;
+    td.startY = touch.clientY;
+    const card = e.currentTarget;
+    td.timer = setTimeout(() => beginTouchDrag(card, touch), LONG_PRESS_MS);
+  }
+
+  function onTouchMove(e) {
+    const touch = e.touches[0];
+    if (!td.active) {
+      // Cancel long-press if finger moved too much before timer fired
+      if (Math.hypot(touch.clientX - td.startX, touch.clientY - td.startY) > MOVE_CANCEL_PX) {
+        clearTimeout(td.timer);
+      }
+      return;
+    }
+    e.preventDefault(); // block page scroll while dragging
+
+    // Move clone
+    td.clone.style.left = (touch.clientX - td.offsetX) + "px";
+    td.clone.style.top  = (touch.clientY - td.offsetY) + "px";
+
+    // Detect which tab the finger is over
+    td.clone.style.visibility = "hidden";
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    td.clone.style.visibility = "";
+
+    const tab = el?.closest(".tab");
+    if (tab !== td.overTab) {
+      if (td.overTab) td.overTab.classList.remove("drag-over-tab");
+      td.overTab = tab || null;
+      if (td.overTab) td.overTab.classList.add("drag-over-tab");
+    }
+  }
+
+  function beginTouchDrag(card, touch) {
+    td.active = true;
+    td.card   = card;
+
+    // Dim original card
+    card.classList.add("touch-dragging");
+
+    // Build floating clone
+    const rect   = card.getBoundingClientRect();
+    td.offsetX   = touch.clientX - rect.left;
+    td.offsetY   = touch.clientY - rect.top;
+    td.clone     = card.cloneNode(true);
+    td.clone.className = "card touch-clone";
+    // Strip interactive elements from clone
+    td.clone.querySelectorAll("button").forEach(b => b.remove());
+    td.clone.style.left  = rect.left + "px";
+    td.clone.style.top   = rect.top  + "px";
+    td.clone.style.width = rect.width + "px";
+    document.body.appendChild(td.clone);
+
+    // Highlight tab bar as drop targets
+    document.querySelectorAll(".tab").forEach(t => t.classList.add("drag-target"));
+
+    // Show hint banner
+    document.getElementById("drag-hint").classList.add("visible");
+
+    // Haptic feedback
+    if (navigator.vibrate) navigator.vibrate(40);
+  }
+
+  function onTouchEnd(e) {
+    clearTimeout(td.timer);
+    if (!td.active) return;
+
+    const touch = e.changedTouches[0];
+
+    // Find element under finger (hide clone first)
+    td.clone.style.visibility = "hidden";
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    td.clone.style.visibility = "";
+
+    const tab  = el?.closest(".tab");
+    const zone = el?.closest(".drop-zone");
+
+    if (tab) {
+      // Drop onto a tab → move card to that column; the screen stays on the selected tab
+      const col        = tab.id.replace("tab-", "");
+      const targetId   = `zone-${col}`;
+      const currentId  = cardZoneId(td.card);
+      if (targetId !== currentId) {
+        moveCard(td.card, targetId);
+      }
+    } else if (zone && zone.id !== cardZoneId(td.card)) {
+      // Dropped onto a visible drop-zone (desktop layout)
+      moveCard(td.card, zone.id);
+    } else if (zone && zone.id === cardZoneId(td.card)) {
+      // Same-column reorder
+      const after = getTouchAfterElement(zone, touch.clientY);
+      if (after && after !== td.card) {
+        zone.insertBefore(td.card, after);
+      } else if (!after) {
+        zone.appendChild(td.card);
+      }
+      updateCounts();
+    }
+
+    cancelTouchDrag();
+  }
+
+  function cancelTouchDrag() {
+    clearTimeout(td.timer);
+    if (td.card)  td.card.classList.remove("touch-dragging");
+    if (td.clone) td.clone.remove();
+    if (td.overTab) td.overTab.classList.remove("drag-over-tab");
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("drag-target", "drag-over-tab"));
+    document.getElementById("drag-hint").classList.remove("visible");
+    td = { active: false, card: null, clone: null, timer: null,
+           startX: 0, startY: 0, offsetX: 0, offsetY: 0, overTab: null };
+  }
+
+  function getTouchAfterElement(zone, y) {
+    const cards = [...zone.querySelectorAll(".card")].filter(c => c !== td.card);
+    return cards.find(c => {
+      const box = c.getBoundingClientRect();
+      return y < box.top + box.height / 2;
+    }) || null;
+  }
+
+  /* ─── Card factory ─── */
+  function createCard(m) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.draggable = USE_NATIVE_DRAG;
+    card.dataset.id = m.id;
+
+    card.innerHTML = `
+      <div class="card-main">
+        <div class="card-text">
+          <div class="card-title">${m.title}</div>
+          <div class="card-desc">${m.desc}</div>
+        </div>
+        <div class="card-moves">
+          <button class="card-move-btn move-down">&minus;</button>
+          <button class="card-move-btn move-up">+</button>
+        </div>
+        <button class="card-expand" aria-label="More detail">&#8964;</button>
+      </div>
+      <div class="card-detail">${m.detail}</div>
+    `;
+
+    const expandBtn = card.querySelector(".card-expand");
+    const detail    = card.querySelector(".card-detail");
+    expandBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      detail.classList.toggle("visible");
+      expandBtn.classList.toggle("open");
+    });
+
+    card.querySelector(".move-up").addEventListener("click", e => { e.stopPropagation(); stepCard(card, 1); });
+    card.querySelector(".move-down").addEventListener("click", e => { e.stopPropagation(); stepCard(card, -1); });
+
+    /* Desktop drag */
+    card.addEventListener("dragstart", e => {
+      draggedCard = card;
+      setTimeout(() => card.classList.add("dragging"), 0);
+      e.dataTransfer.effectAllowed = "move";
+    });
+    card.addEventListener("dragend", () => {
+      card.classList.remove("dragging");
+      draggedCard = null;
+      document.querySelectorAll(".drop-zone").forEach(z => z.classList.remove("drag-over"));
+    });
+
+    /* Touch drag */
+    initTouchDrag(card);
+
+    refreshCardActions(card);
+    return card;
+  }
+
+  /* ─── Determine which zone a card is in ─── */
+  function cardZoneId(card) {
+    const zone = card.closest(".drop-zone");
+    return zone ? zone.id : null;
+  }
+
+  /* ─── Update the − / + buttons for the card's current zone ─── */
+  function refreshCardActions(card) {
+    const zoneId = cardZoneId(card);
+
+    // − / + buttons: disable at either end of the board
+    const idx  = ZONE_ORDER.indexOf(zoneId);
+    const up   = card.querySelector(".move-up");
+    const down = card.querySelector(".move-down");
+    const title = card.querySelector(".card-title").textContent;
+    up.disabled   = idx >= ZONE_ORDER.length - 1;
+    down.disabled = idx <= 0;
+    up.title   = up.disabled   ? "Already in Top 5" : `Move up to ${ZONE_NAMES[idx + 1]}`;
+    down.title = down.disabled ? "Already in Motivators" : `Move back to ${ZONE_NAMES[idx - 1]}`;
+    up.setAttribute("aria-label", up.disabled ? up.title : `Move ${title} up to ${ZONE_NAMES[idx + 1]}`);
+    down.setAttribute("aria-label", down.disabled ? down.title : `Move ${title} back to ${ZONE_NAMES[idx - 1]}`);
+  }
+
+  /* ─── − / + : move a card one column back (-1) or up (+1) ─── */
+  const ZONE_ORDER = ["zone-all", "zone-ten", "zone-five"];
+  const ZONE_NAMES = ["Motivators", "My 10", "Top 5"];
+
+  function stepCard(card, dir) {
+    const target = ZONE_ORDER[ZONE_ORDER.indexOf(cardZoneId(card)) + dir];
+    if (target) moveCard(card, target);
+  }
+
+  /* ─── Move a card to a zone ─── */
+  function moveCard(card, targetZoneId) {
+    const targetZone = document.getElementById(targetZoneId);
+    const limit = parseInt(targetZone.dataset.limit);
+    const count = targetZone.querySelectorAll(".card").length;
+
+    if (count >= limit) {
+      showToast(targetZoneId === "zone-ten"
+        ? "Maximum 10 motivators reached"
+        : "Maximum 5 motivators reached");
+      return;
+    }
+
+    targetZone.appendChild(card);
+    refreshCardActions(card);
+    updateCounts();
+    updateEmptyHints();
+  }
+
+  /* ─── Desktop drag-and-drop ─── */
+  function setupDesktopDrop(zone) {
+    zone.addEventListener("dragover", e => {
+      e.preventDefault();
+      const limit = parseInt(zone.dataset.limit);
+      const count = zone.querySelectorAll(".card").length;
+      const same  = draggedCard && draggedCard.closest(".drop-zone") === zone;
+      if (count < limit || same) {
+        zone.classList.add("drag-over");
+        e.dataTransfer.dropEffect = "move";
+      }
+    });
+    zone.addEventListener("dragleave", e => {
+      if (!zone.contains(e.relatedTarget)) zone.classList.remove("drag-over");
+    });
+    zone.addEventListener("drop", e => {
+      e.preventDefault();
+      zone.classList.remove("drag-over");
+      if (!draggedCard) return;
+      const limit = parseInt(zone.dataset.limit);
+      const count = zone.querySelectorAll(".card:not(.dragging)").length;
+      const same  = draggedCard.closest(".drop-zone") === zone;
+      if (!same && count >= limit) { showToast("Column is full"); return; }
+
+      const after = getDragAfterElement(zone, e.clientY);
+      after ? zone.insertBefore(draggedCard, after) : zone.appendChild(draggedCard);
+
+      refreshCardActions(draggedCard);
+      updateCounts();
+      updateEmptyHints();
+    });
+  }
+
+  function getDragAfterElement(zone, y) {
+    const cards = [...zone.querySelectorAll(".card:not(.dragging)")];
+    return cards.reduce((closest, child) => {
+      const box    = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+
+  /* ─── Tab switching (mobile) ─── */
+  function switchTab(col) {
+    activeTab = col;
+    setActiveTabUI(col);
+    // On mobile, scroll the section into view; on desktop this is a no-op (CSS handles visibility)
+    const section = document.getElementById(`section-${col}`);
+    section.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+  }
+
+  function setActiveTabUI(col) {
+    ["all","ten","five"].forEach(c => {
+      document.getElementById(`tab-${c}`).classList.toggle("active", c === col);
+    });
+  }
+
+  /* ─── IntersectionObserver: sync tab bar as user swipes ─── */
+  let snapObserver = null;
+  function setupSnapObserver() {
+    if (snapObserver) snapObserver.disconnect();
+    const colView = document.querySelector(".col-view");
+    snapObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const col = entry.target.id.replace("section-", "");
+          activeTab = col;
+          setActiveTabUI(col);
+        }
+      });
+    }, { root: colView, threshold: 0.5 });
+    ["all","ten","five"].forEach(col => {
+      snapObserver.observe(document.getElementById(`section-${col}`));
+    });
+  }
+
+  /* ─── Counts & empty states ─── */
+  function updateCounts() {
+    saveBoard(); // every board change ends here
+    [
+      { col: "all",  limit: null },
+      { col: "ten",  limit: 10  },
+      { col: "five", limit: 5   }
+    ].forEach(({ col, limit }) => {
+      const zone  = document.getElementById(`zone-${col}`);
+      const count = zone.querySelectorAll(".card").length;
+      document.getElementById(`count-${col}`).textContent = limit ? `${count}/${limit}` : count;
+    });
+  }
+
+  function updateEmptyHints() {
+    ["ten","five"].forEach(col => {
+      const zone  = document.getElementById(`zone-${col}`);
+      const empty = document.getElementById(`empty-${col}`);
+      if (!empty) return;
+      const hasCards = zone.querySelectorAll(".card").length > 0;
+      empty.style.display = hasCards ? "none" : "block";
+    });
+  }
+
+  /* ─── UI helpers ─── */
+  function toggleSettings() {
+    const open = document.getElementById("settings-drawer").classList.toggle("open");
+    document.getElementById("settings-toggle").setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  function toggleIntro() {
+    document.getElementById("intro-body").classList.toggle("visible");
+    document.getElementById("intro-chevron").classList.toggle("open");
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  /* ─── Export PDF ─── */
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  const emailInput = document.getElementById("user-email");
+
+  // Shows or clears the email error; an empty field only counts as an error on export.
+  function checkEmail(required) {
+    const value = emailInput.value.trim();
+    const valid = EMAIL_PATTERN.test(value);
+    const showError = !valid && (required || value !== "");
+    emailInput.classList.toggle("invalid", showError);
+    emailInput.setAttribute("aria-invalid", showError ? "true" : "false");
+    document.getElementById("email-field").classList.toggle("show-error", showError);
+    return valid;
+  }
+
+  const savedEmail = storageGet(EMAIL_KEY);
+  if (savedEmail) emailInput.value = savedEmail;
+
+  emailInput.addEventListener("input", function () {
+    storageSet(EMAIL_KEY, this.value.trim());
+    if (this.classList.contains("invalid")) checkEmail(false);
+  });
+  emailInput.addEventListener("blur", () => checkEmail(false));
+
+  function exportPDF() {
+    const email = emailInput.value.trim();
+    if (!checkEmail(true)) {
+      emailInput.focus();
+      return;
+    }
+
+    document.getElementById("pp-name").textContent = email;
+    document.getElementById("pp-date").textContent = new Date().toLocaleDateString("en-AU", {
+      day: "numeric", month: "long", year: "numeric"
+    });
+
+    const cols = [
+      { zoneId: "zone-five", label: "Top 5 Motivators", cls: "top5" },
+      { zoneId: "zone-ten",  label: "My 10 Motivators", cls: "" },
+      { zoneId: "zone-all",  label: "Motivators",       cls: "" }
+    ];
+
+    const container = document.getElementById("pp-columns");
+    container.innerHTML = "";
+
+    cols.forEach(({ zoneId, label, cls }) => {
+      const zone  = document.getElementById(zoneId);
+      const cards = [...zone.querySelectorAll(".card")];
+
+      const col = document.createElement("div");
+      col.className = `pp-col ${cls}`;
+      col.innerHTML = `
+        <div class="pp-col-head">
+          <h2>${label}</h2>
+          <span class="pp-col-badge">${cards.length}</span>
+        </div>
+        <div class="pp-col-body" id="ppbody-${zoneId}"></div>
+      `;
+      container.appendChild(col);
+
+      const body = col.querySelector(`#ppbody-${zoneId}`);
+      if (cards.length === 0) {
+        body.innerHTML = `<div class="pp-empty">None selected</div>`;
+      } else {
+        cards.forEach(card => {
+          const el = document.createElement("div");
+          el.className = "pp-card";
+          el.innerHTML = `
+            <div class="pp-card-title">${card.querySelector(".card-title").textContent}</div>
+            <div class="pp-card-desc">${card.querySelector(".card-desc").textContent}</div>
+          `;
+          body.appendChild(el);
+        });
+      }
+    });
+
+    fitPrintPageToOnePage();
+    window.print();
+  }
+
+  // Shrink the print layout so it always fits on a single A4 landscape page.
+  function fitPrintPageToOnePage() {
+    const page = document.getElementById("print-page");
+    page.style.zoom = "";
+    page.style.width = "";
+    page.classList.add("pp-measure");
+    // Apply print-only styles while measuring by copying the print media rules
+    const printRules = [...document.styleSheets].flatMap(sheet => {
+      try { return [...sheet.cssRules]; } catch (e) { return []; }
+    }).filter(r => r.media && [...r.media].includes("print"))
+      .flatMap(r => [...r.cssRules].filter(rule => rule.selectorText && rule.selectorText.includes(".pp-")))
+      .map(rule => rule.cssText).join("\n");
+    const tmp = document.createElement("style");
+    tmp.textContent = printRules;
+    document.head.appendChild(tmp);
+
+    const mm = page.getBoundingClientRect().width / 269;
+    const availableHeight = 184 * mm; // A4 landscape height minus page margins, with a little slack
+    // Height of the layout once scaled by `scale` (laid out wider so it still spans the page)
+    const scaledHeight = scale => {
+      page.style.width = (269 / scale) + "mm";
+      return page.scrollHeight * scale;
+    };
+
+    let scale = 1;
+    if (scaledHeight(1) > availableHeight) {
+      let lo = 0.3, hi = 1;
+      for (let i = 0; i < 12; i++) {
+        const mid = (lo + hi) / 2;
+        if (scaledHeight(mid) <= availableHeight) lo = mid; else hi = mid;
+      }
+      scale = lo;
+    }
+
+    tmp.remove();
+    page.classList.remove("pp-measure");
+    page.style.width = "";
+    if (scale < 1) {
+      page.style.zoom = scale.toFixed(3);
+      page.style.width = (269 / scale).toFixed(1) + "mm"; // keep columns spanning the full page width
+    }
+  }
+
+  /* ─── Reset ─── */
+  function resetBoard() {
+    if (confirm("This will put every card back in its original place and clear your email. Are you sure?")) {
+      storageRemove(BOARD_KEY);
+      storageRemove(EMAIL_KEY);
+      emailInput.value = "";
+      checkEmail(false);
+      initBoard();
+    }
+  }
+
+  /* ─── Init ─── */
+  function initBoard() {
+    ["all","ten","five"].forEach(col => {
+      document.getElementById(`zone-${col}`).innerHTML = "";
+    });
+
+    // Re-add empty hints
+    ["ten","five"].forEach(col => {
+      const msg = col === "ten"
+        ? "Tap + on a motivator to get started"
+        : "Tap + on a card in My 10 to build your Top 5";
+      const hint = document.createElement("div");
+      hint.className = "empty-state";
+      hint.id = `empty-${col}`;
+      hint.textContent = msg;
+      document.getElementById(`zone-${col}`).appendChild(hint);
+    });
+
+    const saved  = loadBoard();
+    const byId   = new Map(MOTIVATORS.map(m => [m.id, m]));
+    const placed = new Set();
+    if (saved) {
+      [["ten", 10], ["five", 5], ["all", Infinity]].forEach(([col, limit]) => {
+        const zone = document.getElementById(`zone-${col}`);
+        (Array.isArray(saved[col]) ? saved[col] : []).forEach(id => {
+          if (!byId.has(id) || placed.has(id) || zone.querySelectorAll(".card").length >= limit) return;
+          placed.add(id);
+          const card = createCard(byId.get(id));
+          zone.appendChild(card);
+          refreshCardActions(card);
+        });
+      });
+    }
+    MOTIVATORS.forEach(m => {
+      if (!placed.has(m.id)) document.getElementById("zone-all").appendChild(createCard(m));
+    });
+
+    document.querySelectorAll(".drop-zone").forEach(setupDesktopDrop);
+    updateCounts();
+    updateEmptyHints();
+    setupSnapObserver();
+
+    // Scroll back to active tab on reset
+    if (activeTab !== "all") {
+      requestAnimationFrame(() => switchTab(activeTab));
+    }
+  }
+
+  initBoard();
+</script>
+</body>
+</html>
