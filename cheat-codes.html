@@ -13,8 +13,7 @@
       --text:         #e8e0f0;
       --text-muted:   #8880a0;
       --border:       #3a3248;
-      --hassle-color: #4caf70;
-      --resist-color: #e6a020;
+      --done-color:   #4caf70;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -126,17 +125,24 @@
 
     .codes { display: flex; flex-direction: column; gap: 6px; padding: 10px; }
 
+    /* Selectable code card */
     .code {
       display: flex;
       align-items: center;
       gap: 12px;
+      width: 100%;
+      text-align: left;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 9px 10px;
+      color: var(--text);
+      font-family: inherit;
+      cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
     }
     .code:hover { border-color: #5a5068; }
+    .code:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
     .code-num {
       font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
@@ -149,71 +155,57 @@
 
     .code-text { flex: 1; font-size: 12.5px; line-height: 1.45; }
 
-    .code.pick-hassle { background: rgba(76,175,112,0.30); border-color: var(--hassle-color); }
-    .code.pick-resist { background: rgba(230,160,32,0.30); border-color: var(--resist-color); }
-
-    .pick-buttons { display: flex; gap: 4px; flex-shrink: 0; }
-
-    .pick-btn {
-      border: 1px solid rgba(255,255,255,0.3);
-      background: transparent;
-      color: #fff;
-      border-radius: 4px;
-      padding: 3px 7px;
-      font-size: 10px;
+    .check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
       font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s, opacity 0.15s;
+      color: transparent;
+      transition: background 0.15s, border-color 0.15s;
     }
-    .pick-btn:hover:not(.active) { opacity: 0.65; }
-    .pick-btn.active.hassle { background: var(--hassle-color); border-color: var(--hassle-color); }
-    .pick-btn.active.resist { background: var(--resist-color); border-color: var(--resist-color); }
 
-    /* Bonus level: Your Move */
-    .bonus { border-color: var(--accent); }
+    .code.selected { background: rgba(76,175,112,0.30); border-color: var(--done-color); }
+    .code.selected .check { background: var(--done-color); border-color: var(--done-color); color: #fff; }
+
+    /* Bonus level: Doing it now */
+    .bonus { border-color: var(--accent); display: flex; flex-direction: column; }
     .bonus .level-tag b { font-size: 11px; }
 
+    .count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--done-color);
+      white-space: nowrap;
+    }
+
     .bonus-intro { padding: 12px 16px 0; font-size: 12.5px; line-height: 1.5; color: var(--text-muted); }
-    .bonus-intro strong { color: var(--text); }
 
-    .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; }
+    .doing-list { list-style: none; display: flex; flex-direction: column; gap: 6px; padding: 12px; flex: 1; }
 
-    .slot {
-      background: var(--card);
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      padding: 12px;
+    .doing-list li {
       display: flex;
-      flex-direction: column;
       gap: 8px;
-    }
-    .slot.filled.hassle { border: 1px solid var(--hassle-color); }
-    .slot.filled.resist { border: 1px solid var(--resist-color); }
-
-    .slot-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
-    .slot.hassle .slot-label { color: var(--hassle-color); }
-    .slot.resist .slot-label { color: var(--resist-color); }
-
-    .slot-code { font-size: 13px; line-height: 1.45; min-height: 38px; }
-    .slot-code .num { font-family: ui-monospace, Menlo, monospace; color: var(--accent); font-weight: 700; margin-right: 6px; }
-    .slot-code.empty { color: var(--text-muted); font-style: italic; font-size: 12px; }
-
-    .slot textarea {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      background: var(--card);
+      border: 1px solid var(--done-color);
+      border-radius: 8px;
       padding: 8px 10px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 12px;
-      line-height: 1.4;
-      resize: vertical;
-      min-height: 54px;
-      outline: none;
     }
-    .slot textarea::placeholder { color: var(--text-muted); font-style: italic; }
-    .slot textarea:focus { border-color: var(--accent); }
+    .doing-list li .num { font-family: ui-monospace, Menlo, monospace; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+
+    .doing-list li.empty {
+      border: 1px dashed var(--border);
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 12px;
+    }
 
     .quote {
       padding: 0 16px 14px;
@@ -236,9 +228,6 @@
       .topbar, .page-content { padding-left: 16px; padding-right: 16px; }
       .name-input { width: 100%; }
       .topbar-controls { width: 100%; }
-      .slots { grid-template-columns: 1fr; }
-      .code { flex-wrap: wrap; }
-      .pick-buttons { width: 100%; padding-left: 34px; }
     }
 
     /* ── Print / Export PDF ── */
@@ -247,6 +236,7 @@
 
       body {
         background: #1a1520 !important;
+        min-height: 0;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
@@ -273,15 +263,13 @@
       .code { padding: 6px 7px; gap: 7px; border-radius: 4px; }
       .code-num { font-size: 10.5px; width: 17px; }
       .code-text { font-size: 10px; line-height: 1.35; }
-      .pick-buttons { display: none; }
+      .check { width: 13px; height: 13px; font-size: 8px; border-width: 1px; }
 
-      .bonus { grid-column: span 1; }
       .bonus-intro { padding: 6px 9px 0; font-size: 9.5px; }
-      .slots { grid-template-columns: 1fr; gap: 5px; padding: 6px; }
-      .slot { padding: 6px; gap: 4px; }
-      .slot-label { font-size: 8px; }
-      .slot-code { font-size: 10.5px; min-height: 0; }
-      .slot textarea { font-size: 10px; min-height: 0; padding: 4px 6px; resize: none; }
+      /* Selected cards are already highlighted, so print the panel as a compact summary */
+      .doing-list { display: none; }
+      .bonus { justify-content: space-between; }
+      .bonus .count { font-size: 18px; }
       .quote { padding: 0 9px 6px; font-size: 9px; }
       .credit { margin-top: 6px; font-size: 8px; }
     }
@@ -292,7 +280,7 @@
   <div class="topbar">
     <div class="topbar-title">
       <h1>30 Life Cheat Codes</h1>
-      <p>I wish I knew earlier — pick two and use both this week</p>
+      <p>I wish I knew earlier — select the codes you're doing now</p>
     </div>
     <div class="topbar-controls">
       <a class="nav-link" href="index.html">← Framework</a>
@@ -366,13 +354,7 @@
       }
     ];
 
-    const slotDefs = [
-      { key: 'hassle', btn: 'Hassle', label: 'Removes a hassle from my life', plan: 'How I’ll use it this week…' },
-      { key: 'resist', btn: 'Resisting', label: 'The one I’ve been resisting', plan: 'How I’ll use it this week…' }
-    ];
-
-    const allCodes = [];               // { num, text, el }
-    const picks = { hassle: null, resist: null };
+    const allCodes = [];               // { num, text, el, selected }
     const layout = document.getElementById('layout');
     const pad = n => String(n).padStart(2, '0');
 
@@ -390,20 +372,16 @@
 
       lvl.codes.forEach(text => {
         num++;
-        const code = { num, text };
-        const row = document.createElement('div');
+        const code = { num, text, selected: false };
+        const row = document.createElement('button');
+        row.type = 'button';
         row.className = 'code';
-        row.innerHTML = `<span class="code-num">${pad(num)}</span><span class="code-text"></span><div class="pick-buttons"></div>`;
+        row.setAttribute('aria-pressed', 'false');
+        row.innerHTML = `<span class="code-num">${pad(num)}</span><span class="code-text"></span><span class="check" aria-hidden="true">✓</span>`;
         row.querySelector('.code-text').textContent = text;
-
-        const btns = row.querySelector('.pick-buttons');
-        slotDefs.forEach(s => {
-          const b = document.createElement('button');
-          b.className = `pick-btn ${s.key}`;
-          b.textContent = s.btn;
-          b.title = s.label;
-          b.addEventListener('click', () => pick(s.key, code));
-          btns.appendChild(b);
+        row.addEventListener('click', () => {
+          code.selected = !code.selected;
+          render();
         });
 
         code.el = row;
@@ -414,64 +392,53 @@
       layout.appendChild(section);
     });
 
-    // Bonus level
+    // Summary panel
     const bonus = document.createElement('div');
     bonus.className = 'level bonus';
     bonus.innerHTML = `
       <div class="level-header">
         <span class="level-tag">BONUS LEVEL<b>■</b></span>
-        <h2>Your Move</h2>
+        <h2>Doing It Now</h2>
+        <span class="count" id="count">0 / 30</span>
       </div>
-      <p class="bonus-intro">Cheat codes only work if you enter them. <strong>Don’t try all 30.</strong> Pick two and use both this week.</p>
-      <div class="slots">
-        ${slotDefs.map(s => `
-          <div class="slot ${s.key}" id="slot-${s.key}">
-            <span class="slot-label">${s.label}</span>
-            <div class="slot-code empty">Choose “${s.btn}” on a code</div>
-            <textarea placeholder="${s.plan}" rows="2"></textarea>
-          </div>`).join('')}
-      </div>
+      <p class="bonus-intro">Cheat codes only work if you enter them. Select every code you're using right now.</p>
+      <ul class="doing-list" id="doingList"></ul>
       <p class="quote">“Life has cheat codes too. It’s just that nobody ever hands you the list.” — Daniel Pink</p>`;
     layout.appendChild(bonus);
 
-    function pick(slot, code) {
-      const other = slot === 'hassle' ? 'resist' : 'hassle';
-      if (picks[slot] === code) {
-        picks[slot] = null;                         // toggle off
-      } else {
-        if (picks[other] === code) picks[other] = null;  // one code, one slot
-        picks[slot] = code;
+    function render() {
+      const doingList = document.getElementById('doingList');
+      doingList.innerHTML = '';
+      const selected = allCodes.filter(c => c.selected);
+
+      allCodes.forEach(c => {
+        c.el.classList.toggle('selected', c.selected);
+        c.el.setAttribute('aria-pressed', String(c.selected));
+      });
+
+      document.getElementById('count').textContent = `${selected.length} / ${allCodes.length}`;
+
+      if (!selected.length) {
+        const li = document.createElement('li');
+        li.className = 'empty';
+        li.textContent = 'Nothing selected yet — click a code you’re doing now';
+        doingList.appendChild(li);
+        return;
       }
-      render();
+
+      selected.forEach(c => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="num">#${pad(c.num)}</span><span></span>`;
+        li.lastChild.textContent = c.text;
+        doingList.appendChild(li);
+      });
     }
 
-    function render() {
-      allCodes.forEach(c => {
-        c.el.classList.toggle('pick-hassle', picks.hassle === c);
-        c.el.classList.toggle('pick-resist', picks.resist === c);
-        c.el.querySelector('.pick-btn.hassle').classList.toggle('active', picks.hassle === c);
-        c.el.querySelector('.pick-btn.resist').classList.toggle('active', picks.resist === c);
-      });
-      slotDefs.forEach(s => {
-        const slot = document.getElementById(`slot-${s.key}`);
-        const out = slot.querySelector('.slot-code');
-        const c = picks[s.key];
-        slot.classList.toggle('filled', !!c);
-        if (c) {
-          out.classList.remove('empty');
-          out.innerHTML = `<span class="num">#${pad(c.num)}</span>`;
-          out.appendChild(document.createTextNode(c.text));
-        } else {
-          out.classList.add('empty');
-          out.textContent = `Choose “${s.btn}” on a code`;
-        }
-      });
-    }
+    render();
 
     // Reset
     document.getElementById('resetBtn').addEventListener('click', () => {
-      picks.hassle = picks.resist = null;
-      document.querySelectorAll('.slot textarea').forEach(t => t.value = '');
+      allCodes.forEach(c => c.selected = false);
       document.getElementById('nameInput').value = '';
       render();
     });
