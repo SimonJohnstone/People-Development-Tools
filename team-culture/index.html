@@ -39,6 +39,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
   .tk-home:focus-visible { outline: 2px solid #8b7cf6; outline-offset: 2px; }
 
 .nav-btn{padding:10px 20px;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:10px 10px 0 0;transition:all .2s;white-space:nowrap}
+@media(max-width:767px),(pointer:coarse){.nav-btn{min-height:44px}}
 .nav-btn.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
 .nav-btn:not(.active):hover{color:var(--ink)}
 
@@ -105,7 +106,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-he
 /* SURVEY CARDS */
 .name-field{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:var(--r);padding:14px 18px;margin:20px 0 12px;box-shadow:var(--shadow)}
 .name-field label{font-size:13px;font-weight:600;white-space:nowrap;color:var(--muted)}
-.name-field input{flex:1;border:none;outline:none;font-family:'Inter',sans-serif;font-size:15px;background:transparent;color:var(--ink)}
+.name-field input{flex:1;min-width:0;border:none;outline:none;font-family:'Inter',sans-serif;font-size:15px;background:transparent;color:var(--ink)}
 .name-field input::placeholder{color:var(--border)}
 
 .progress-track{height:4px;background:var(--border);border-radius:4px;margin:16px 0 4px}

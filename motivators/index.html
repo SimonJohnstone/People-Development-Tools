@@ -235,10 +235,13 @@
 
     .intro-steps { list-style: none; counter-reset: steps; display: flex; flex-direction: column; gap: 10px; }
 
+    /* The number badge sits in the left padding. (The step used to be a flex row, which
+       turned every bold word into its own column and scrambled the sentence.) */
     .intro-steps li {
       counter-increment: steps;
-      display: flex;
-      gap: 10px;
+      position: relative;
+      padding-left: 32px;
+      min-height: 22px;
       font-size: 0.85rem;
       color: var(--text);
       line-height: 1.45;
@@ -246,7 +249,8 @@
 
     .intro-steps li::before {
       content: counter(steps);
-      flex-shrink: 0;
+      position: absolute;
+      left: 0; top: 0;
       width: 22px; height: 22px;
       background: var(--accent);
       color: #fff;
@@ -396,6 +400,9 @@
 
     .card-main { display: flex; align-items: flex-start; gap: 10px; }
 
+    /* − / + buttons and the expand arrow */
+    .card-side { flex-shrink: 0; display: flex; align-items: flex-start; gap: 10px; }
+
     .card-text { flex: 1; min-width: 0; }
 
     .card-title {
@@ -465,6 +472,22 @@
     .card-move-btn:active:not(:disabled) { background: var(--accent); color: #fff; }
 
     .card-move-btn:disabled { opacity: 0.25; cursor: default; }
+
+    /* Touch screens: finger-sized − / + buttons, with the expand arrow as a wide strip
+       beneath them so the card text keeps its width */
+    @media (max-width: 767px), (pointer: coarse) {
+      .card { padding-top: 10px; padding-right: 10px; }
+      .card-side { flex-direction: column; align-items: stretch; gap: 0; }
+      .card-moves { gap: 8px; }
+      .card-move-btn { width: 44px; height: 44px; font-size: 22px; }
+      .card-expand {
+        height: 44px;
+        margin: 0 0 -12px;   /* reaches down into the card's bottom padding */
+        padding: 0;
+        font-size: 0.95rem;
+        touch-action: manipulation;
+      }
+    }
 
     .card-detail {
       font-size: 0.82rem;
@@ -1140,11 +1163,13 @@
           <div class="card-title">${m.title}</div>
           <div class="card-desc">${m.desc}</div>
         </div>
-        <div class="card-moves">
-          <button class="card-move-btn move-down">&minus;</button>
-          <button class="card-move-btn move-up">+</button>
+        <div class="card-side">
+          <div class="card-moves">
+            <button class="card-move-btn move-down">&minus;</button>
+            <button class="card-move-btn move-up">+</button>
+          </div>
+          <button class="card-expand" aria-label="More detail">&#8964;</button>
         </div>
-        <button class="card-expand" aria-label="More detail">&#8964;</button>
       </div>
       <div class="card-detail">${m.detail}</div>
     `;

@@ -368,6 +368,14 @@
     }
   }
 
+  /* Touch screens: finger-sized − / + buttons */
+  @media (max-width: 767px), (pointer: coarse) {
+    .card-moves { top: 6px; right: 6px; gap: 8px; }
+    .card-move-btn { width: 44px; height: 44px; font-size: 22px; }
+    /* Keep the title clear of the buttons, and the description below them */
+    .card-title { padding-right: 96px; min-height: 34px; }
+  }
+
   .card-move-btn:active:not(:disabled) {
     background: var(--accent);
     color: #fff;
@@ -706,6 +714,16 @@
 
 
     .card { touch-action: auto; }
+
+    /* Open instructions scroll inside their own panel: the page itself can't scroll here,
+       so without this the later steps were cut off and the board was squeezed to nothing */
+    .instructions-body.open {
+      max-height: 55vh;
+      max-height: 55dvh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
 
     /* Tab bar */
     .tab-bar {
