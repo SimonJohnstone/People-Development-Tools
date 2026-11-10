@@ -266,6 +266,11 @@
       .topbar-controls { width: 100%; }
     }
 
+    /* Touch screens: every code row is at least finger height */
+    @media screen and (max-width: 860px), screen and (pointer: coarse) {
+      .code { min-height: 44px; }
+    }
+
     /* ── Print / Export PDF ── */
     @media print {
       @page { size: A4 landscape; margin: 8mm; }
@@ -437,6 +442,7 @@
         row.addEventListener('click', () => {
           code.selected = !code.selected;
           render();
+          saveState();
         });
 
         code.el = row;
@@ -495,12 +501,37 @@
       });
     }
 
+    // ── Saved progress: selections and name are kept in this browser, so a refresh or a
+    //    closed tab doesn't lose them. (Browsers can block or fill localStorage.)
+    const STORAGE_KEY = 'cheatCodes';
+    const nameInput = document.getElementById('nameInput');
+
+    function saveState() {
+      const selected = allCodes.filter(c => c.selected).map(c => c.num);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: nameInput.value, selected }));
+      } catch (e) {}
+    }
+
+    function loadState() {
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
+      if (!saved || !Array.isArray(saved.selected)) return;
+      allCodes.forEach(c => c.selected = saved.selected.includes(c.num));
+      if (typeof saved.name === 'string') nameInput.value = saved.name;
+    }
+
+    loadState();
     render();
+    nameInput.addEventListener('input', saveState);
 
     // Reset
     document.getElementById('resetBtn').addEventListener('click', () => {
+      const hasWork = nameInput.value.trim() || allCodes.some(c => c.selected);
+      if (hasWork && !confirm('This will clear all your selections and your name. Are you sure?')) return;
       allCodes.forEach(c => c.selected = false);
-      document.getElementById('nameInput').value = '';
+      nameInput.value = '';
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
       render();
     });
 
